@@ -21,7 +21,6 @@ public class CarController : MonoBehaviour
     public float InputSteering { get; set; }
     public float InputBrake { get; set; }
 
-    //private PlayerInfo m_PlayerInfo;
 
     private Rigidbody _rigidbody;
     private float _steerHelper = 0.8f;
@@ -33,7 +32,7 @@ public class CarController : MonoBehaviour
     {
         get => _currentSpeed;
         set
-        {
+        {   //CODIGO QUE SIRVE PARA MOSTRARLO POR PANTALLA
             if (Math.Abs(_currentSpeed - value) < float.Epsilon) return;
             _currentSpeed = value;
             if (OnSpeedChangeEvent != null)
@@ -55,7 +54,7 @@ public class CarController : MonoBehaviour
     }
 
     public void Update()
-    {
+    {   //PUEDE QUE TENGAMOS QUE USAR UN RIGIDBODY DE NET
         Speed = _rigidbody.velocity.magnitude;
     }
 

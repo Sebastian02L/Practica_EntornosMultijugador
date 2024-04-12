@@ -61,7 +61,7 @@ public class RaceController : MonoBehaviour
             arcLengths[i] = ComputeCarArcLength(i);
         }
 
-        _players.Sort(new PlayerInfoComparer(arcLengths));
+        _players.Sort(new PlayerInfoComparer(arcLengths));  //Esta linea determina el orden de los jugadores
 
         string myRaceOrder = "";
         foreach (var player in _players)

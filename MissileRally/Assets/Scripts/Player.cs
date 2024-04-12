@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     // Race Info
     public GameObject car;
     public int CurrentPosition { get; set; }
-    public int CurrentLap { get; set; }
+    public int CurrentLap { get; set; } //Vuelta en la que está
 
     public override string ToString()
     {
