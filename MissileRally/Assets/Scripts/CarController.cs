@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class CarController : MonoBehaviour
+public class CarController : NetworkBehaviour
 {
     #region Variables
 
