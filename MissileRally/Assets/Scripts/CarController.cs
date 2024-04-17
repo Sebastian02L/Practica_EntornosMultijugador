@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
+using UnityEngine.InputSystem;
 
-public class CarController : NetworkBehaviour
+public class CarController : MonoBehaviour
 {
     #region Variables
 
@@ -21,6 +21,7 @@ public class CarController : NetworkBehaviour
     public float InputAcceleration { get; set; }
     public float InputSteering { get; set; }
     public float InputBrake { get; set; }
+    PlayerInput playerInput;
 
 
     private Rigidbody _rigidbody;

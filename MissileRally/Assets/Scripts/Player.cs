@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Unity.Netcode;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     // Player Info
     public string Name { get; set; }
@@ -11,6 +13,7 @@ public class Player : MonoBehaviour
     public GameObject car;
     public int CurrentPosition { get; set; }
     public int CurrentLap { get; set; } //Vuelta en la que está
+    PlayerInput playerInput;
 
     public override string ToString()
     {
@@ -20,5 +23,11 @@ public class Player : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.currentRace.AddPlayer(this);
+        playerInput = FindObjectOfType<PlayerInput>();
+
+        if (!IsOwner)
+        {
+            playerInput.enabled = false;
+        }
     }
 }
