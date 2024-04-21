@@ -12,7 +12,10 @@ public class InputController : NetworkBehaviour
         car = GetComponent<Player>().car.GetComponent<CarController>();
     }
 
-    [ServerRpc]
+    ////////////////////////////////////////////// METODOS RPC EJECUTADOS POR EL SERVIDOR //////////////////////////////////////////////
+    /// Estos metodos son invocados por los clientes pasando la informacion como parametros. Luego el servidor ejecuta dichos metodos.
+    /// Netcode se encarga de actualizar los valores para cada clon del jugador.
+    [ServerRpc] 
     void OnMoveServerRpc(Vector2 input)
     {
         car.InputAcceleration = input.y;
@@ -30,6 +33,7 @@ public class InputController : NetworkBehaviour
     {
     }
 
+    ////////////////////////////////////////////// METODOS EJECUTADOS POR LOS CLIENTES //////////////////////////////////////////////
     public void OnMove(InputAction.CallbackContext context)
     {
         OnMoveServerRpc(context.ReadValue<Vector2>());

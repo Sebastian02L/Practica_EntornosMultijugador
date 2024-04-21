@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 using Unity.Netcode;
 using Cinemachine;
 
+
 public class Player : NetworkBehaviour
 {
     // Player Info
@@ -25,22 +26,22 @@ public class Player : NetworkBehaviour
 
     private void Start()
     {
-        GameManager.Instance.currentRace.AddPlayer(this);
+        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+        _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
 
-        _playerInput = GetComponent<PlayerInput>();
-
+        //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
         {
-            playerSetup();
-            _playerInput.enabled = true;
+            playerSetup();                  //Llamada al metodo que se encarga de los preparativos cuando el juagdor se une a la partida.
+            _playerInput.enabled = true;    //Habilitamos su PlayerInput, de manera que pueda controlar su coche.
         }
     }
 
+    //Metodo encargado de asignar el prefab del jugador a la camara de ChineMachine
     void playerSetup()
     {
-        //Asignacion de objetivo de camara
-        _camera = FindAnyObjectByType<CinemachineVirtualCamera>();
-        _camera.Follow = car.transform;
-        _camera.LookAt = car.transform;
+        _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
+        _camera.Follow = car.transform;                            //Indicamos que la camara debe seguir a la transformada del coche del prefab.
+        _camera.LookAt = car.transform;                            //Indicamos que el vector LookAt apunte a la transformada del coche.
     }
 }

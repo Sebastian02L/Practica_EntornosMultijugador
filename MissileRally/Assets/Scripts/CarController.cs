@@ -62,7 +62,8 @@ public class CarController : NetworkBehaviour
 
     public void FixedUpdate()
     {
-        if (!IsServer) { return; }
+        //Todas las fisicas se calculan en el servidor mientras que Netcode se encarga de sincronizar a todos los clientes, por lo tanto, solo el servidor ejecuta el FixedUpdate.
+        if (!IsServer) { return; }  
 
         InputSteering = Mathf.Clamp(InputSteering, -1, 1);
         InputAcceleration = Mathf.Clamp(InputAcceleration, -1, 1);
