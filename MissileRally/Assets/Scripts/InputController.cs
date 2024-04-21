@@ -1,8 +1,9 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoBehaviour
+public class InputController : NetworkBehaviour
 {
     private CarController car;
 
@@ -11,11 +12,16 @@ public class InputController : MonoBehaviour
         car = GetComponent<Player>().car.GetComponent<CarController>();
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    [ServerRpc]
+    void OnMoveServerRpc(Vector2 input)
     {
-        var input = context.ReadValue<Vector2>();
         car.InputAcceleration = input.y;
         car.InputSteering = input.x;
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        OnMoveServerRpc(context.ReadValue<Vector2>());
     }
 
     public void OnBrake(InputAction.CallbackContext context)

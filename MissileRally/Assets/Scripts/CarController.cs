@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CarController : MonoBehaviour
+public class CarController : NetworkBehaviour
 {
     #region Variables
 
@@ -21,7 +22,6 @@ public class CarController : MonoBehaviour
     public float InputAcceleration { get; set; }
     public float InputSteering { get; set; }
     public float InputBrake { get; set; }
-    PlayerInput playerInput;
 
 
     private Rigidbody _rigidbody;
@@ -62,6 +62,8 @@ public class CarController : MonoBehaviour
 
     public void FixedUpdate()
     {
+        if (!IsServer) { return; }
+
         InputSteering = Mathf.Clamp(InputSteering, -1, 1);
         InputAcceleration = Mathf.Clamp(InputAcceleration, -1, 1);
         InputBrake = Mathf.Clamp(InputBrake, 0, 1);
