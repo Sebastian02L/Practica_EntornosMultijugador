@@ -19,6 +19,17 @@ public class InputController : NetworkBehaviour
         car.InputSteering = input.x;
     }
 
+    [ServerRpc]
+    void OnBrakeServerRpc(float input)
+    {
+        car.InputBrake = input;
+    }
+
+    [ServerRpc]
+    void OnAttackServerRpc(float input)
+    {
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         OnMoveServerRpc(context.ReadValue<Vector2>());
@@ -26,8 +37,7 @@ public class InputController : NetworkBehaviour
 
     public void OnBrake(InputAction.CallbackContext context)
     {
-        var input = context.ReadValue<float>();
-        car.InputBrake = input;
+        OnBrakeServerRpc(context.ReadValue<float>());
     }
 
     public void OnAttack(InputAction.CallbackContext context)

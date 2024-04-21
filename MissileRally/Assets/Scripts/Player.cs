@@ -14,9 +14,9 @@ public class Player : NetworkBehaviour
     public GameObject car;
     public int CurrentPosition { get; set; }
     public int CurrentLap { get; set; } //Vuelta en la que está
-    //InputController inputController;
-    PlayerInput playerInput;
-    CinemachineVirtualCamera camara;
+
+    PlayerInput _playerInput;
+    CinemachineVirtualCamera _camera;
 
     public override string ToString()
     {
@@ -26,23 +26,21 @@ public class Player : NetworkBehaviour
     private void Start()
     {
         GameManager.Instance.currentRace.AddPlayer(this);
-        playerInput = GetComponent<PlayerInput>();
-        //inputController = GetComponent<InputController>();
+
+        _playerInput = GetComponent<PlayerInput>();
 
         if (IsOwner)
         {
             playerSetup();
-            playerInput.enabled = true;
+            _playerInput.enabled = true;
         }
     }
 
     void playerSetup()
     {
         //Asignacion de objetivo de camara
-        camara = FindAnyObjectByType<CinemachineVirtualCamera>();
-        camara.Follow = car.transform;
-        camara.LookAt = car.transform;
-
-        //playerInput.actions.FindAction("Move").performed += ctx => inputController.OnMove(ctx);
+        _camera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        _camera.Follow = car.transform;
+        _camera.LookAt = car.transform;
     }
 }
