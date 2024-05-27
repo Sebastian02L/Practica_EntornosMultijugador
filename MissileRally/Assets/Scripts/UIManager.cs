@@ -12,6 +12,7 @@ using Unity.Services.Core;
 public class UIManager : MonoBehaviour
 {
     NetworkManager _networkManager;
+    GameObject _canvas;
     const int maxConnections = 50;
     string joinCode = "Enter room code...";
     public string playerName = "Enter player name...";
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         _networkManager = NetworkManager.Singleton;
+        _canvas = GameObject.Find("Canvas");
     }
 
     async void StartHost()
