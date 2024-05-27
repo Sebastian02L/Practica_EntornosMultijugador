@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     NetworkManager _networkManager;
     const int maxConnections = 50;
     string joinCode = "Enter room code...";
+    public string playerName = "Enter player name...";
 
     private void Start()
     {
@@ -67,6 +68,7 @@ public class UIManager : MonoBehaviour
     {
         if (GUILayout.Button("Host")) StartHost();
         if (GUILayout.Button("Client")) StartClient(joinCode);
+        playerName = GUILayout.TextArea(playerName); //
         joinCode = GUILayout.TextArea(joinCode);
     }
 

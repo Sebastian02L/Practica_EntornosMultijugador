@@ -77,8 +77,11 @@ public class RaceController : MonoBehaviour
         // Compute the projection of the car position to the closest circuit 
         // path segment and accumulate the arc-length along of the car along
         // the circuit.
-        Vector3 carPos = this._players[id].car.transform.position;
-
+        Vector3 carPos = Vector3.zero;
+        if (this._players[id].car)
+        {
+            carPos = this._players[id].car.transform.position;
+        }
 
         float minArcL =
             this._circuitController.ComputeClosestPointArcLength(carPos, out _, out var carProj, out _);

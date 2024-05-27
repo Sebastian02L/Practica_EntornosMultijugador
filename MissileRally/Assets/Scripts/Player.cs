@@ -28,6 +28,7 @@ public class Player : NetworkBehaviour
     {
         GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
+        Name = GameObject.Find("@UIManager").GetComponent<UIManager>().playerName; //
 
         //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
