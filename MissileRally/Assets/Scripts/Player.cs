@@ -37,6 +37,7 @@ public class Player : NetworkBehaviour
         //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
         {
+            GameManager.Instance.player = this;
             playerSetup();                  //Llamada al metodo que se encarga de los preparativos cuando el juagdor se une a la partida.
             _playerInput.enabled = true;    //Habilitamos su PlayerInput, de manera que pueda controlar su coche.
         }

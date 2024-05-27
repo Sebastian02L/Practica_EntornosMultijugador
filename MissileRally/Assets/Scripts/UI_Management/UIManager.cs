@@ -8,23 +8,64 @@ using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using Unity.Services.Core;
+using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviour, IUI
 {
-    NetworkManager _networkManager;
     GameObject _canvas;
+    IState _currentState;
+
+    public IState State
+    {
+        get
+        {
+            return _currentState;
+        }
+
+        set
+        {
+            if (_currentState != null)
+            {
+                _currentState.Exit();
+            }
+
+            _currentState = value;
+
+            _currentState.Enter();
+        }
+    }
+
+    public GameObject Canvas 
+    {
+        get
+        {
+            return _canvas;
+        }
+
+        set
+        {
+            _canvas = value;
+        }
+    }
+
     const int maxConnections = 50;
     string joinCode = "Enter room code...";
     public string playerName = "Enter player name...";
 
     private void Start()
     {
-        _networkManager = NetworkManager.Singleton;
-        _canvas = GameObject.Find("Canvas");
+        Canvas = GameObject.Find("Canvas");
+        State = new StartingState(this);
+    }
+
+    private void Update()
+    {
+        _currentState.Update();
     }
 
     async void StartHost()
     {
+
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn)
         {
@@ -34,11 +75,13 @@ public class UIManager : MonoBehaviour
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
         joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
-        _networkManager.StartHost();
+        NetworkManager.Singleton.StartHost();
+
     }
 
     async void StartClient(string joinCode)
     {
+
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn)
         {
@@ -48,13 +91,15 @@ public class UIManager : MonoBehaviour
         var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
 
-        _networkManager.StartClient();
+        NetworkManager.Singleton.StartClient();
+
     }
 
     void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-        if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+
+        if (State is StartingState)
         {
             StartButtons();
         }
@@ -70,7 +115,7 @@ public class UIManager : MonoBehaviour
     {
         if (GUILayout.Button("Host")) StartHost();
         if (GUILayout.Button("Client")) StartClient(joinCode);
-        playerName = GUILayout.TextArea(playerName); //
+        playerName = GUILayout.TextArea(playerName);
         joinCode = GUILayout.TextArea(joinCode);
     }
 
