@@ -26,6 +26,7 @@ public class Player : NetworkBehaviour
 
     private void Start()
     {
+        transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala
         GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
         Name = GameObject.Find("@UIManager").GetComponent<UIManager>().playerName; //
