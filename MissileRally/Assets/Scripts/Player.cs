@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Unity.Netcode;
 using Cinemachine;
+using TMPro;
 
 
 public class Player : NetworkBehaviour
@@ -40,6 +41,12 @@ public class Player : NetworkBehaviour
             GameManager.Instance.player = this;
             playerSetup();                  //Llamada al metodo que se encarga de los preparativos cuando el juagdor se une a la partida.
             _playerInput.enabled = true;    //Habilitamos su PlayerInput, de manera que pueda controlar su coche.
+            if(car != null)
+            {
+                //Si es propietario, se desactiva su nombre para sí mismo.
+                car.transform.Find("MiniCanvas").gameObject.SetActive(false);
+                car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = Name;
+            }
         }
     }
 
