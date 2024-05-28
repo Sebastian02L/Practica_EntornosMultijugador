@@ -1,16 +1,54 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Unity.Collections;
 using Unity.Netcode;
 using Cinemachine;
 using TMPro;
+using System.Collections.Concurrent;
+using System;
+using System.Globalization;
 
+[Serializable]
+public struct PlayerData : INetworkSerializable
+{
+    public string name;
+    public float colorRed;
+    public float colorGreen;
+    public float colorBlue;
+    public float colorAlpha;
+
+    public PlayerData(string name, float r, float g, float b, float a = 1.0f)
+    {
+        this.name = name;
+        this.colorRed = r;
+        this.colorGreen = g;
+        this.colorBlue = b;
+        this.colorAlpha = a;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref name);
+        serializer.SerializeValue(ref colorRed);
+        serializer.SerializeValue(ref colorGreen);
+        serializer.SerializeValue(ref colorBlue);
+        serializer.SerializeValue(ref colorAlpha);
+    }
+
+    public override string ToString()
+    {
+        return name;
+    }
+}
 
 public class Player : NetworkBehaviour
 {
     // Player Info
+    PlayerData data;
     public string Name { get; set; }
-    public int ID { get; set; }
+    public Color color;
+    public ulong ID { get; set; }
 
     // Race Info
     public GameObject car;
@@ -30,31 +68,67 @@ public class Player : NetworkBehaviour
 
     private void Start()
     {
-        transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala
+        _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
+        transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
+
         GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
-        Name = GameObject.Find("@UIManager").GetComponent<UIManager>().playerName; //
+
+        ID = GetComponent<NetworkObject>().NetworkObjectId;
 
         //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
         {
             GameManager.Instance.player = this;
-            playerSetup();                  //Llamada al metodo que se encarga de los preparativos cuando el juagdor se une a la partida.
             _playerInput.enabled = true;    //Habilitamos su PlayerInput, de manera que pueda controlar su coche.
-            if(car != null)
+
+            playerSetup();                  //Llamada al metodo que se encarga de los preparativos de la cámara cuando el jugador se une a la partida.
+
+            string tempName = GameObject.Find("@UIManager").GetComponent<UIManager>().playerName;
+
+            if (tempName.Equals("Enter player name..."))
             {
-                //Si es propietario, se desactiva su nombre para sí mismo.
-                car.transform.Find("MiniCanvas").gameObject.SetActive(false);
-                car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = Name;
+                Name = car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text + " " + ID;
             }
+            else
+            {
+                Name = tempName;
+            }
+
+            data = new PlayerData(Name, 1.0f, 0.0f, 0.0f);
+
+            AddPlayer(ID, data);
         }
     }
 
-    //Metodo encargado de asignar el prefab del jugador a la camara de ChineMachine
+    //Metodo encargado de asignar el prefab del jugador a la camara de CineMachine
     void playerSetup()
     {
-        _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
         _camera.Follow = car.transform;                            //Indicamos que la camara debe seguir a la transformada del coche del prefab.
         _camera.LookAt = car.transform;                            //Indicamos que el vector LookAt apunte a la transformada del coche.
+    }
+
+    [ServerRpc]
+    void AddPlayerServerRpc(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players.TryAdd(id, data);
+        car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
+
+        GetPlayerInfoClientRpc(id, data);
+    }
+
+    void AddPlayer(ulong id, PlayerData data)
+    {
+        AddPlayerServerRpc(id, data);
+    }
+
+    [ClientRpc]
+    void GetPlayerInfoClientRpc(ulong id, PlayerData data)
+    {
+        if (IsServer) return;
+
+        GameManager.Instance.players.TryAdd(id, data);
+        car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
 }

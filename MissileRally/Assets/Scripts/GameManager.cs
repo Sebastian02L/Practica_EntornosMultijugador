@@ -1,8 +1,12 @@
+using System.Collections.Concurrent;
+using Unity.Netcode;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public Player player;
+
+    public ConcurrentDictionary<ulong, PlayerData> players = new ConcurrentDictionary<ulong, PlayerData>();
 
     public int numPlayers = 50;
 
@@ -20,5 +24,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(this);
     }
 }
