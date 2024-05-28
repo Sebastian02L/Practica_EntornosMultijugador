@@ -57,7 +57,7 @@ public class Player : NetworkBehaviour
 
     PlayerInput _playerInput;
     CinemachineVirtualCamera _camera;
-    SelectCarColorMenu _carColorMenu;
+    SelectCarColorMenu _selectCarColorMenu;
 
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
@@ -69,9 +69,7 @@ public class Player : NetworkBehaviour
 
     private void Start()
     {
-        _carColorMenu = FindAnyObjectByType<SelectCarColorMenu>();
-        _carColorMenu.colorChanged += OnColorChange;
-        _carColorMenu.gameObject.SetActive(false);
+        
         _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
         transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
 
@@ -109,6 +107,16 @@ public class Player : NetworkBehaviour
         else
         {
             AskForMyInfo(ID);
+        }
+        
+    }
+
+    private void Update()
+    {
+        if (_selectCarColorMenu == null && IsOwner)
+        {
+            _selectCarColorMenu = FindObjectOfType<SelectCarColorMenu>();
+            _selectCarColorMenu.colorChanged += OnColorChange;
         }
     }
 
@@ -159,8 +167,8 @@ public class Player : NetworkBehaviour
     void SendDataServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players[id] = data;
-        this.data = data;
-
+        car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
+        
         GetMyInfoClientRpc(id, data);
     }
 }
