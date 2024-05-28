@@ -131,7 +131,7 @@ public class Player : NetworkBehaviour
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players.TryAdd(id, data);
-        //car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
+        car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
 
     void AddPlayer(ulong id, PlayerData data)
