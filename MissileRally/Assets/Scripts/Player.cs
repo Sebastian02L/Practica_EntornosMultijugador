@@ -71,11 +71,11 @@ public class Player : NetworkBehaviour
         _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
         transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
 
-        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
-
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
 
-        ID = GetComponent<NetworkObject>().NetworkObjectId;
+        ID = GetComponent<NetworkObject>().NetworkObjectId - 1;
+
+        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
 
         //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
