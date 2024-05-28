@@ -99,13 +99,10 @@ public class Player : NetworkBehaviour
             data = new PlayerData(Name, 1.0f, 0.0f, 0.0f);
 
             AddPlayer(ID, data);
+        }
 
-            car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = Name;
-        }
-        else
-        {
-            AskForMyInfo(ID);
-        }
+        AskForMyInfo(ID);
+        
     }
 
     //Metodo encargado de asignar el prefab del jugador a la camara de CineMachine
