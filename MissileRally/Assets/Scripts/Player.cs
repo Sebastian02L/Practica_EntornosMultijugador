@@ -99,6 +99,12 @@ public class Player : NetworkBehaviour
             data = new PlayerData(Name, 1.0f, 0.0f, 0.0f);
 
             AddPlayer(ID, data);
+
+            car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = Name;
+        }
+        else
+        {
+            AskForMyInfo(ID);
         }
     }
 
@@ -113,9 +119,7 @@ public class Player : NetworkBehaviour
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players.TryAdd(id, data);
-        car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
-
-        GetPlayerInfoClientRpc(id, data);
+        //car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
 
     void AddPlayer(ulong id, PlayerData data)
@@ -123,11 +127,20 @@ public class Player : NetworkBehaviour
         AddPlayerServerRpc(id, data);
     }
 
-    [ClientRpc]
-    void GetPlayerInfoClientRpc(ulong id, PlayerData data)
+    void AskForMyInfo(ulong id)
     {
-        if (IsServer) return;
+        AskForMyInfoServerRpc(id);
+    }
 
+    [ServerRpc(RequireOwnership = false)]
+    void AskForMyInfoServerRpc(ulong id)
+    {
+        GetMyInfoClientRpc(id, GameManager.Instance.players[id]);
+    }
+
+    [ClientRpc]
+    void GetMyInfoClientRpc(ulong id, PlayerData data)
+    {
         GameManager.Instance.players.TryAdd(id, data);
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
