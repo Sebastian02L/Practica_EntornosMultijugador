@@ -45,7 +45,7 @@ public struct PlayerData : INetworkSerializable
 public class Player : NetworkBehaviour
 {
     // Player Info
-    PlayerData data;
+    public PlayerData data;
     public string Name { get; set; }
     public Color color;
     public ulong ID { get; set; }
@@ -57,6 +57,7 @@ public class Player : NetworkBehaviour
 
     PlayerInput _playerInput;
     CinemachineVirtualCamera _camera;
+    SelectCarColorMenu _selectCarColorMenu;
 
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
@@ -100,9 +101,17 @@ public class Player : NetworkBehaviour
 
             AddPlayer(ID, data);
         }
-
         AskForMyInfo(ID);
         
+    }
+
+    private void Update()
+    {
+        if(_selectCarColorMenu == null && IsOwner && FindAnyObjectByType<SelectCarColorMenu>() != null) 
+        { 
+            _selectCarColorMenu = FindAnyObjectByType<SelectCarColorMenu>();
+            _selectCarColorMenu.colorChanged += OnColorChange;
+        }
     }
 
     //Metodo encargado de asignar el prefab del jugador a la camara de CineMachine
@@ -140,5 +149,27 @@ public class Player : NetworkBehaviour
     {
         GameManager.Instance.players.TryAdd(id, data);
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
+    }
+
+    void OnColorChange()
+    {
+        SendDataServerRpc(ID, data);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SendDataServerRpc(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players[id] = data;
+        this.data = data;
+
+        GetMyColorClientRpc(id, data);
+    }
+    [ClientRpc]
+    void GetMyColorClientRpc(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players[id] = data;
+        this.data = data;
+
+        car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
     }
 }
