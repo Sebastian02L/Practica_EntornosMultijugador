@@ -47,7 +47,6 @@ public class Player : NetworkBehaviour
     // Player Info
     public PlayerData data;
     public string Name { get; set; }
-    public Color color;
     public ulong ID { get; set; }
 
     // Race Info
@@ -101,8 +100,8 @@ public class Player : NetworkBehaviour
 
             AddPlayer(ID, data);
         }
+
         AskForMyInfo(ID);
-        
     }
 
     private void Update()
@@ -149,6 +148,7 @@ public class Player : NetworkBehaviour
     {
         GameManager.Instance.players.TryAdd(id, data);
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
+        car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
     }
 
     void OnColorChange()
@@ -160,6 +160,9 @@ public class Player : NetworkBehaviour
     void SendDataServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players[id] = data;
+
+        print(this.data.Equals(GameManager.Instance.players[id]));
+
         this.data = data;
 
         GetMyColorClientRpc(id, data);
