@@ -18,6 +18,7 @@ public class ColorSelectionState : AUIState
 
     public override void Exit()
     {
+        colorSelectionUI.SetActive(false);
     }
 
     public override void FixedUpdate()

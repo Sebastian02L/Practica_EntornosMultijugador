@@ -30,7 +30,7 @@ public class CarController : NetworkBehaviour
 
     private float _currentSpeed = 0;
 
-    private float Speed
+    public float Speed
     {
         get => _currentSpeed;
         set

@@ -96,7 +96,8 @@ public class Player : NetworkBehaviour
                 Name = tempName;
             }
 
-            data = new PlayerData(Name, 1.0f, 0.0f, 0.0f);
+            Color initialCarColor = car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color;
+            data = new PlayerData(Name, initialCarColor.r, initialCarColor.g, initialCarColor.b);
 
             AddPlayer(ID, data);
         }
@@ -106,8 +107,8 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        if(_selectCarColorMenu == null && IsOwner && FindAnyObjectByType<SelectCarColorMenu>() != null) 
-        { 
+        if (_selectCarColorMenu == null && IsOwner && FindAnyObjectByType<SelectCarColorMenu>() != null)
+        {
             _selectCarColorMenu = FindAnyObjectByType<SelectCarColorMenu>();
             _selectCarColorMenu.colorChanged += OnColorChange;
         }
@@ -120,16 +121,17 @@ public class Player : NetworkBehaviour
         _camera.LookAt = car.transform;                            //Indicamos que el vector LookAt apunte a la transformada del coche.
     }
 
+    void AddPlayer(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players.TryAdd(id, data);
+        AddPlayerServerRpc(id, data);
+    }
+
     [ServerRpc]
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players.TryAdd(id, data);
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
-    }
-
-    void AddPlayer(ulong id, PlayerData data)
-    {
-        AddPlayerServerRpc(id, data);
     }
 
     void AskForMyInfo(ulong id)
@@ -147,6 +149,8 @@ public class Player : NetworkBehaviour
     void GetMyInfoClientRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players.TryAdd(id, data);
+        this.data = data;
+
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
         car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
     }
@@ -160,13 +164,11 @@ public class Player : NetworkBehaviour
     void SendDataServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players[id] = data;
-
-        print(this.data.Equals(GameManager.Instance.players[id]));
-
         this.data = data;
 
         GetMyColorClientRpc(id, data);
     }
+
     [ClientRpc]
     void GetMyColorClientRpc(ulong id, PlayerData data)
     {

@@ -23,7 +23,7 @@ public class StartingState : AUIState
 
     public override void Update()
     {
-        if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer)
+        if ((NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer) && GameManager.Instance.player != null)
         {
             UI.State = new ColorSelectionState(UI);
         }

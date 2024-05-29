@@ -27,7 +27,6 @@ public class SelectCarColorMenu : MonoBehaviour
     public void ExitMenu()
     {
         colorChanged?.Invoke();
-        gameObject.SetActive(false);
         manager.State = new GameInterfaceState(manager);
     }
 }
