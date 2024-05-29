@@ -57,7 +57,17 @@ public class CarController : NetworkBehaviour
 
     public void Update()
     {   //PUEDE QUE TENGAMOS QUE USAR UN RIGIDBODY DE NET
-        Speed = _rigidbody.velocity.magnitude;
+        if (IsServer)
+        {
+            Speed = _rigidbody.velocity.magnitude;
+            UpdateSpeedClientRPC(Speed);
+        }
+    }
+
+    [ClientRpc]
+    void UpdateSpeedClientRPC(float speed)
+    {
+        Speed = speed;
     }
 
     public void FixedUpdate()

@@ -7,6 +7,7 @@ public class GameInterfaceState : AUIState
 {
     GameObject gameUI;
     TextMeshProUGUI speedText;
+    CarController carController;
 
     public GameInterfaceState(IUI UI) : base(UI)
     {
@@ -17,6 +18,7 @@ public class GameInterfaceState : AUIState
         gameUI = UI.Canvas.transform.Find("GameUI").gameObject;
         speedText = gameUI.transform.Find("Panel").Find("SpeedText").GetComponent<TextMeshProUGUI>();
         gameUI.SetActive(true);
+        carController = GameManager.Instance.player.car.GetComponent<CarController>();
     }
 
     public override void Exit()
@@ -31,8 +33,10 @@ public class GameInterfaceState : AUIState
 
     public override void Update()
     {
-        int speed = (int)GameManager.Instance.player.car.GetComponent<CarController>().Speed;
-        Debug.Log(speed);
-        speedText.text = speed.ToString() + " km/h";
+        if (carController != null)
+        {
+            int speed = (int)carController.Speed;
+            speedText.text = speed.ToString() + " km/h";
+        }
     }
 }
