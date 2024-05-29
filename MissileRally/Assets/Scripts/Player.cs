@@ -104,6 +104,7 @@ public class Player : NetworkBehaviour
             data = new PlayerData(Name, initialCarColor.r, initialCarColor.g, initialCarColor.b);
 
             AddPlayer(ID, data);
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         }
 
         AskForMyInfo(ID);
@@ -122,6 +123,33 @@ public class Player : NetworkBehaviour
             _playerReadyComponent = FindAnyObjectByType<PlayerReady>();
             _playerReadyComponent.playerReady += OnPlayerReady;
         }
+
+        // Apartado encargado de comprobar cuantos jugadores hay conectados
+        if (GameManager.Instance.currentPlayers != GameManager.Instance.players.Count) // Si el valor de currentPlayers es distinto del numero de players del diccionario
+        {
+            GameManager.Instance.currentPlayers = GameManager.Instance.players.Count; // Lo actualiza
+        }
+
+        print("CURRENT PLAYERS: " + GameManager.Instance.currentPlayers);
+        print("CURRENT PLAYERS IN DICTIONARY: " + GameManager.Instance.players.Count);
+    }
+
+
+    // Este método se llama en el servidor cuando un cliente se desconecta
+    public void OnClientDisconnect(ulong id)
+    {
+        if (IsServer) // Si es el host
+        {
+            // Elimina el player del diccionario
+            GameManager.Instance.players.TryRemove(id, out _); // out _ descarta el playerData
+            UpdatePlayersClientRpc(id); // Manda a los clientes el id del player que deben eliminar de su diccionario
+        }
+    }
+
+    [ClientRpc]
+    void UpdatePlayersClientRpc(ulong id)
+    {
+        GameManager.Instance.players.TryRemove(id, out _); // out _ descarta el playerData
     }
 
     //Metodo encargado de asignar el prefab del jugador a la camara de CineMachine

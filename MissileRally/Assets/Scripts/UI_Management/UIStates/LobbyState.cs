@@ -34,8 +34,11 @@ public class LobbyState : AUIState
 
     public override void Update()
     {
+
+        playersCounter = GameManager.Instance.currentPlayers;
+
         //playersCounter debe actualizar su valor al del numero de jugadores conectados
-        //playersCounterText.text = playersCounter.ToString();
+        playersCounterText.text = playersCounter.ToString();
 
         //messageStatus debe actualizarce a "esperando a que los jugadores esten listos" cuando se haya escogido un mapa.
         //messageStatusText = messageStatus;

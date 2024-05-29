@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     public int numPlayers = 50;
 
+    public int currentPlayers;
+
     public RaceController currentRace;
 
     public static GameManager Instance { get; private set; }
@@ -27,4 +29,8 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(this);
     }
+    
+
+    
+
 }
