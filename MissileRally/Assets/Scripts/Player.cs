@@ -53,6 +53,7 @@ public class Player : NetworkBehaviour
 
     // Player Info
     public string Name { get; set; }
+    //Variable donde se almacena la ID del jugador, la cual empieza a contar en 0
     public ulong ID { get; set; }
 
     // Race Info
@@ -87,7 +88,7 @@ public class Player : NetworkBehaviour
         transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
 
-        ID = GetComponent<NetworkObject>().NetworkObjectId - 1;
+        ID = GetComponent<NetworkObject>().OwnerClientId;
 
         GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
 
@@ -114,6 +115,8 @@ public class Player : NetworkBehaviour
             data = new PlayerData(Name, initialCarColor.r, initialCarColor.g, initialCarColor.b);
 
             AddPlayer(ID, data);
+
+            GetReadyPlayersServerRpc(ID);
 
             if (IsServer)
             {
@@ -171,14 +174,30 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void OnClientDisconnect(ulong id) // Este método se llama en el servidor cuando un cliente se desconecta
     {
-            // Elimina el player del diccionario
-            GameManager.Instance.players.TryRemove(id, out _); // out _ descarta el playerData
-            UpdatePlayersClientRpc(id); // Manda a los clientes el id del player que deben eliminar de su diccionario
+        //Elimina el player del diccionario del host
+        GameManager.Instance.players.TryRemove(id, out data);
+
+        //Manda a los clientes el id del player que deben eliminar de su diccionario y true si era un jugador que estaba listo
+        if (data.status.Equals("Ready"))
+        {
+            GameManager.Instance.readyPlayers -= 1;
+            UpdatePlayersClientRpc(id, true);
+        }
+        else //Si no era un jugador que estaba listo, simplemente lo elimina del diccionario en los clientes
+        {
+            UpdatePlayersClientRpc(id, false); 
+        }
+        
     }
 
     [ClientRpc]
-    void UpdatePlayersClientRpc(ulong id)
+    void UpdatePlayersClientRpc(ulong id, bool state)
     {
+        if (state)
+        {
+            GameManager.Instance.readyPlayers -= 1;
+        }
+
         GameManager.Instance.players.TryRemove(id, out _); // out _ descarta el playerData
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,18 +295,42 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void SendReadyPlayerServerRpc(ulong id, PlayerData data)
     {
-        GameManager.Instance.players[id] = data;
-        this.data = data;
-        UpdateReadyPlayersClientRpc(id, data);
+        //GameManager.Instance.players[id] = data;
+        //this.data = data;
+        GameManager.Instance.readyPlayers += 1;
+        UpdateReadyPlayersClientRpc(id, data, GameManager.Instance.readyPlayers);
     }
 
     [ClientRpc]
-    void UpdateReadyPlayersClientRpc(ulong id, PlayerData data)
+    void UpdateReadyPlayersClientRpc(ulong id, PlayerData data, int readyPlayers)
     {
         GameManager.Instance.players[id] = data;
         this.data = data;
+        GameManager.Instance.readyPlayers = readyPlayers;
+        
 
         car.transform.Find("MiniCanvas").transform.Find("Estado").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].status;
+    }
+
+    //Metodo que consulta el numero de jugadores listos cuando un nuevo jugador se une a la sala.
+    [ServerRpc]
+    void GetReadyPlayersServerRpc(ulong newPlayerID)
+    {
+        var clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { newPlayerID }
+            }
+        };
+
+        getReadyPlayersClientRpc(GameManager.Instance.readyPlayers, clientRpcParams);
+    }
+
+    [ClientRpc]
+    void getReadyPlayersClientRpc(int readyPlayers, ClientRpcParams param)
+    { 
+        GameManager.Instance.readyPlayers = readyPlayers;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -299,7 +342,7 @@ public class Player : NetworkBehaviour
     void OnMapSelected(int previousValue, int newValue)
     {
         if (IsServer) { return; }
-        
+
         GameManager.Instance.mapSelectedId = newValue;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

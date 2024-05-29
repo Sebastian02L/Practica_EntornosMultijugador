@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     public int currentPlayers;
 
+    public int readyPlayers;
+
     public int mapSelectedId = 0;
 
     public RaceController currentRace;

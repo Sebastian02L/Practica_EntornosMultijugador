@@ -8,8 +8,11 @@ public class LobbyState : AUIState
     GameObject lobbyInterface;
     TextMeshProUGUI playersCounterText; //Referencia al texto de la interfaz con el numero de jugadores conectados
     TextMeshProUGUI messageStatusText;  //Referencia al texto de la interfaz que indica si se ha seleccionado el mapa y esperando a que los jugadores esten listos
+    TextMeshProUGUI playersReadyText;   //
     int playersCounter; //Variable que almacena el numero de jugadores conectados
     string messageStatus; //Variable que almacena el estado del Lobby (esperando mapa y que los jugadores esten listos)
+    int playersReadyCounter; //
+
     bool statusChanged = false;
 
     public LobbyState(IUI UI) : base(UI)
@@ -22,8 +25,7 @@ public class LobbyState : AUIState
         lobbyInterface.SetActive(true);
         playersCounterText = lobbyInterface.transform.Find("Panel1").Find("Counter").GetComponent<TextMeshProUGUI>();
         messageStatusText = lobbyInterface.transform.Find("Panel2").Find("MessageStatus").GetComponent<TextMeshProUGUI>();
-
-        Debug.Log("Entrar al lobby: " + GameManager.Instance.mapSelectedId);
+        playersReadyText = lobbyInterface.transform.Find("Panel3").Find("Counter").GetComponent<TextMeshProUGUI>();
 
         if (GameManager.Instance.mapSelectedId == 0)
         {
@@ -44,9 +46,12 @@ public class LobbyState : AUIState
     public override void Update()
     {
         playersCounter = GameManager.Instance.currentPlayers;
+        playersReadyCounter = GameManager.Instance.readyPlayers;
 
         //playersCounter debe actualizar su valor al del numero de jugadores conectados
         playersCounterText.text = playersCounter.ToString();
+        //Actualizamos el numero de jugadores listos de la partida
+        playersReadyText.text = $"{playersReadyCounter} / {playersCounter}";
 
         if (!statusChanged && GameManager.Instance.mapSelectedId != 0)
         {
