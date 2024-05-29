@@ -288,7 +288,14 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void OnPlayerReady()
     {
-        data.status = "Ready";
+        if(data.status == "Unready")
+        {
+            data.status = "Ready";
+        }
+        else
+        {
+            data.status = "Unready";
+        }
         SendReadyPlayerServerRpc(ID, data);
     }
 
@@ -297,7 +304,15 @@ public class Player : NetworkBehaviour
     {
         //GameManager.Instance.players[id] = data;
         //this.data = data;
-        GameManager.Instance.readyPlayers += 1;
+        if(data.status == "Ready")
+        {
+            GameManager.Instance.readyPlayers += 1;
+        }
+        else
+        {
+            GameManager.Instance.readyPlayers -= 1;
+        }
+
         UpdateReadyPlayersClientRpc(id, data, GameManager.Instance.readyPlayers);
     }
 

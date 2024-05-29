@@ -6509,6 +6509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba7df5393299b044b1d67493448e491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  readyButton: {fileID: 223974228}
 --- !u!1001 &1648502234
 PrefabInstance:
   m_ObjectHideFlags: 0
