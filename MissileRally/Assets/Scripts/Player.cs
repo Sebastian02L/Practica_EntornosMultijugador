@@ -17,14 +17,16 @@ public struct PlayerData : INetworkSerializable
     public float colorGreen;
     public float colorBlue;
     public float colorAlpha;
+    public string status;
 
-    public PlayerData(string name, float r, float g, float b, float a = 1.0f)
+    public PlayerData(string name, float r, float g, float b, float a = 1.0f, string status = "Unready")
     {
         this.name = name;
         this.colorRed = r;
         this.colorGreen = g;
         this.colorBlue = b;
         this.colorAlpha = a;
+        this.status = status;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -34,6 +36,7 @@ public struct PlayerData : INetworkSerializable
         serializer.SerializeValue(ref colorGreen);
         serializer.SerializeValue(ref colorBlue);
         serializer.SerializeValue(ref colorAlpha);
+        serializer.SerializeValue(ref status);
     }
 
     public override string ToString()
@@ -57,6 +60,7 @@ public class Player : NetworkBehaviour
     PlayerInput _playerInput;
     CinemachineVirtualCamera _camera;
     SelectCarColorMenu _selectCarColorMenu;
+    PlayerReady _playerReadyComponent;
 
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
@@ -112,6 +116,12 @@ public class Player : NetworkBehaviour
             _selectCarColorMenu = FindAnyObjectByType<SelectCarColorMenu>();
             _selectCarColorMenu.colorChanged += OnColorChange;
         }
+
+        if (_playerReadyComponent == null && IsOwner && FindAnyObjectByType<PlayerReady>() != null)
+        {
+            _playerReadyComponent = FindAnyObjectByType<PlayerReady>();
+            _playerReadyComponent.playerReady += OnPlayerReady;
+        }
     }
 
     //Metodo encargado de asignar el prefab del jugador a la camara de CineMachine
@@ -153,6 +163,7 @@ public class Player : NetworkBehaviour
 
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
         car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
+        car.transform.Find("MiniCanvas").transform.Find("Estado").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].status;
     }
 
     void OnColorChange()
@@ -160,7 +171,7 @@ public class Player : NetworkBehaviour
         SendDataServerRpc(ID, data);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     void SendDataServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players[id] = data;
@@ -176,5 +187,28 @@ public class Player : NetworkBehaviour
         this.data = data;
 
         car.transform.Find("body").gameObject.GetComponent<MeshRenderer>().materials[1].color = new Color(GameManager.Instance.players[ID].colorRed, GameManager.Instance.players[ID].colorGreen, GameManager.Instance.players[ID].colorBlue, GameManager.Instance.players[ID].colorAlpha);
+    }
+
+    void OnPlayerReady()
+    {
+        data.status = "Ready";
+        SendReadyPlayerServerRpc(ID, data);
+    }
+
+    [ServerRpc]
+    void SendReadyPlayerServerRpc(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players[id] = data;
+        this.data = data;
+        UpdateReadyPlayersClientRpc(id, data);
+    }
+
+    [ClientRpc]
+    void UpdateReadyPlayersClientRpc(ulong id, PlayerData data)
+    {
+        GameManager.Instance.players[id] = data;
+        this.data = data;
+
+        car.transform.Find("MiniCanvas").transform.Find("Estado").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].status;
     }
 }
