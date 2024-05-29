@@ -17,10 +17,17 @@ public class LobbyState : AUIState
 
     public override void Enter()
     {
+        UI.Canvas.transform.Find("SelectMapMenu").GetComponent<SelectMapMenu>().mapSelected += OnMapSelected;
         lobbyInterface = UI.Canvas.transform.Find("LobbyUI").gameObject;
         lobbyInterface.SetActive(true);
         playersCounterText = lobbyInterface.transform.Find("Panel1").Find("Counter").GetComponent<TextMeshProUGUI>();
         messageStatusText = lobbyInterface.transform.Find("Panel2").Find("MessageStatus").GetComponent<TextMeshProUGUI>();
+
+        if (!GameManager.Instance.mapSelected)
+        {
+            messageStatus = "Esperando a que el host seleccione un mapa...";
+            messageStatusText.text = messageStatus;
+        }
     }
 
     public override void Exit()
@@ -39,9 +46,11 @@ public class LobbyState : AUIState
 
         //playersCounter debe actualizar su valor al del numero de jugadores conectados
         playersCounterText.text = playersCounter.ToString();
+    }
 
-        //messageStatus debe actualizarce a "esperando a que los jugadores esten listos" cuando se haya escogido un mapa.
-        //messageStatusText = messageStatus;
-
+    void OnMapSelected()
+    {
+        messageStatus = "Esperando a que los jugadores estén listos...";
+        messageStatusText.text = messageStatus;
     }
 }

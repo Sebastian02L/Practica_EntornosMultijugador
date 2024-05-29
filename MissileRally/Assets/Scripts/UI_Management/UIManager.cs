@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour, IUI
         }
     }
 
-    const int maxConnections = 50;
+    const int maxConnections = 5;
     string joinCode = "Enter room code...";
     public string playerName = "Enter player name...";
 

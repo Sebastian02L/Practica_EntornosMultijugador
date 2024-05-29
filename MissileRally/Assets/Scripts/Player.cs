@@ -61,6 +61,7 @@ public class Player : NetworkBehaviour
     CinemachineVirtualCamera _camera;
     SelectCarColorMenu _selectCarColorMenu;
     PlayerReady _playerReadyComponent;
+    UIManager _ui;
 
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
@@ -76,6 +77,7 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void Start()
     {
+        _ui = GameObject.Find("@UIManager").GetComponent<UIManager>();
         _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
         transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
 
@@ -93,7 +95,7 @@ public class Player : NetworkBehaviour
 
             playerSetup();                  //Llamada al metodo que se encarga de los preparativos de la cámara cuando el jugador se une a la partida.
 
-            string tempName = GameObject.Find("@UIManager").GetComponent<UIManager>().playerName;
+            string tempName = _ui.playerName;
 
             if (tempName.Equals("Enter player name..."))
             {
@@ -123,7 +125,7 @@ public class Player : NetworkBehaviour
         if (_selectCarColorMenu == null && IsOwner && FindAnyObjectByType<SelectCarColorMenu>() != null)
         {
             _selectCarColorMenu = FindAnyObjectByType<SelectCarColorMenu>();
-            _selectCarColorMenu.colorChanged += OnColorChange;
+            _selectCarColorMenu.colorSelected += OnColorSelected;
         }
 
         if (_playerReadyComponent == null && IsOwner && FindAnyObjectByType<PlayerReady>() != null)
@@ -220,9 +222,18 @@ public class Player : NetworkBehaviour
     ///////////////////////
     ////CAMBIO DE COLOR////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void OnColorChange()
+    void OnColorSelected()
     {
         SendDataServerRpc(ID, data);
+
+        if (IsServer)
+        {
+            _ui.State = new MapSelectionState(_ui);
+        }
+        else
+        {
+            _ui.State = new LobbyState(_ui);
+        }
     }
 
     [ServerRpc]

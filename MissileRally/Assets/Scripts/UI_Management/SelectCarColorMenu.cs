@@ -7,12 +7,10 @@ using UnityEngine.UI;
 
 public class SelectCarColorMenu : MonoBehaviour
 {
-    UIManager manager;
-    public event Action colorChanged;
+    public event Action colorSelected;
 
     private void Start()
     {
-        manager = GameObject.Find("@UIManager").GetComponent<UIManager>();
     }
 
     public void ChangeCarColor(Image image)
@@ -26,7 +24,6 @@ public class SelectCarColorMenu : MonoBehaviour
 
     public void ExitMenu()
     {
-        colorChanged?.Invoke();
-        manager.State = new LobbyState(manager);
+        colorSelected?.Invoke();
     }
 }
