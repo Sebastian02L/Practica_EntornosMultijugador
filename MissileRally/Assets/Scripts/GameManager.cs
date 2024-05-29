@@ -12,8 +12,7 @@ public class GameManager : MonoBehaviour
 
     public int currentPlayers;
 
-    public int mapSelectedId;
-    public bool mapSelected = false;
+    public int mapSelectedId = 0;
 
     public RaceController currentRace;
 

@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class SelectMapMenu : MonoBehaviour
 {
     UIManager manager;
-    public event Action mapSelected;
     int mapSelection;
 
     // Start is called before the first frame update
@@ -18,9 +18,10 @@ public class SelectMapMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
+    //Método invocado cuando pulsas sobre la imagen del mapa.
     public void SelectMap(int map)
     {
         mapSelection = map;
@@ -29,8 +30,7 @@ public class SelectMapMenu : MonoBehaviour
     public void ExitMenu()
     {
         GameManager.Instance.mapSelectedId = mapSelection;
-        GameManager.Instance.mapSelected = true;
-        mapSelected?.Invoke();
+        GameManager.Instance.player.mapSelectedId.Value = mapSelection;
         manager.State = new LobbyState(manager);
     }
 }

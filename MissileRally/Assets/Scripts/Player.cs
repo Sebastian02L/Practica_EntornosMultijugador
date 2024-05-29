@@ -47,8 +47,11 @@ public struct PlayerData : INetworkSerializable
 
 public class Player : NetworkBehaviour
 {
-    // Player Info
+    // Network Data
     public PlayerData data;
+    public NetworkVariable<int> mapSelectedId = new NetworkVariable<int>();
+
+    // Player Info
     public string Name { get; set; }
     public ulong ID { get; set; }
 
@@ -57,11 +60,12 @@ public class Player : NetworkBehaviour
     public int CurrentPosition { get; set; }
     public int CurrentLap { get; set; } //Vuelta en la que está
 
+    UIManager _ui;
     PlayerInput _playerInput;
     CinemachineVirtualCamera _camera;
+
     SelectCarColorMenu _selectCarColorMenu;
     PlayerReady _playerReadyComponent;
-    UIManager _ui;
 
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
@@ -75,12 +79,12 @@ public class Player : NetworkBehaviour
     //////////////////////////
     ////CALLBACKS DE UNITY////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void Start()
+    public void Start()
     {
         _ui = GameObject.Find("@UIManager").GetComponent<UIManager>();
         _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
-        transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
 
+        transform.position = new Vector3(40f, 0f, -15f);  //Punto de aparicion del Lobby de la sala.
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
 
         ID = GetComponent<NetworkObject>().NetworkObjectId - 1;
@@ -118,6 +122,12 @@ public class Player : NetworkBehaviour
         }
 
         AskForMyInfo(ID);
+
+        if (ID == 0)
+        {
+            GameManager.Instance.mapSelectedId = mapSelectedId.Value;
+            mapSelectedId.OnValueChanged += OnMapSelected;
+        }
     }
 
     private void Update()
@@ -139,9 +149,6 @@ public class Player : NetworkBehaviour
         {
             GameManager.Instance.currentPlayers = GameManager.Instance.players.Count; // Lo actualiza
         }
-
-        print("CURRENT PLAYERS: " + GameManager.Instance.currentPlayers);
-        print("CURRENT PLAYERS IN DICTIONARY: " + GameManager.Instance.players.Count);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -284,4 +291,16 @@ public class Player : NetworkBehaviour
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+    /////////////////////////
+    ////MAPA SELECCIONADO////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void OnMapSelected(int previousValue, int newValue)
+    {
+        if (IsServer) { return; }
+        
+        GameManager.Instance.mapSelectedId = newValue;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
