@@ -35,7 +35,7 @@ public class GameInterfaceState : AUIState
     {
         if (carController != null)
         {
-            int speed = (int)carController.Speed;
+            int speed = (int)carController.Speed * (3600/1000);
             speedText.text = speed.ToString() + " km/h";
         }
     }
