@@ -487,6 +487,7 @@ public class Player : NetworkBehaviour
     {
         Debug.Log(currentLapNet.Value);
         currentLapNet.Value += 1;
+        CurrentLap += 1;
         Debug.Log(currentLapNet.Value);
     }
 
