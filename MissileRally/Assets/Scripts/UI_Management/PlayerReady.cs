@@ -15,6 +15,7 @@ public class PlayerReady : MonoBehaviour
     bool clicked = false;
     public Button readyButton;
     TextMeshProUGUI buttonText;
+    bool buttonAvailable = false;
 
     private void Start()
     {
@@ -26,9 +27,10 @@ public class PlayerReady : MonoBehaviour
     {
         //Hacemos que el boton no sea interactuable hasta que el host no haya seleccionado un mapa, asi en caso damos tiempo
         //de que la variable de red se sincronice correctamente.
-        if(GameManager.Instance.mapSelectedId != 0)
+        if(GameManager.Instance.mapSelectedId != 0 && !buttonAvailable)
         {
             readyButton.interactable = true;
+            buttonAvailable = true;
         }
 
         //Si se ha hecho click en el boton, debe esperar un tiempo para volver a pulsarlo
