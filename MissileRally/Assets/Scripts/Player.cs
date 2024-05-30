@@ -50,6 +50,7 @@ public class Player : NetworkBehaviour
     // Network Data
     public PlayerData data;
     public NetworkVariable<int> mapSelectedId = new NetworkVariable<int>();
+    public NetworkVariable<int> currentLapNet = new NetworkVariable<int>();
 
     // Player Info
     public string Name { get; set; }
@@ -90,6 +91,8 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Start()
     {
+        currentLapNet.OnValueChanged += OnCurrentLapChange;
+
         _lobby = GameObject.Find("Lobby");
 
         _ui = GameObject.Find("@UIManager").GetComponent<UIManager>();
@@ -477,4 +480,21 @@ public class Player : NetworkBehaviour
         GameManager.Instance.mapSelectedId = newValue;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    [ServerRpc]
+    public void UpdateCurrentLapServerRpc()
+    {
+        Debug.Log(currentLapNet.Value);
+        currentLapNet.Value += 1;
+        Debug.Log(currentLapNet.Value);
+    }
+
+    void OnCurrentLapChange(int previousValue, int newValue)
+    {
+        if (IsServer) { return; }
+
+        CurrentLap = newValue;
+        Debug.Log(CurrentLap);
+    }
 }

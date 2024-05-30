@@ -7,7 +7,7 @@ using UnityEngine;
 public class SelectMapMenu : MonoBehaviour
 {
     UIManager manager;
-    int mapSelection;
+    int mapSelection = 1;
 
     // Start is called before the first frame update
     void Start()
