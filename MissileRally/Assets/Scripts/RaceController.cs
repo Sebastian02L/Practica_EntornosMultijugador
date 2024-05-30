@@ -35,6 +35,11 @@ public class RaceController : MonoBehaviour
         //player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
     }
 
+    public bool ContainsPlayer(Player player)
+    {
+        return _players.Contains(player);
+    }
+
     private class PlayerInfoComparer : Comparer<Player>
     {
         readonly float[] _arcLengths;

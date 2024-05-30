@@ -155,23 +155,44 @@ public class Player : NetworkBehaviour
             GameManager.Instance.currentPlayers = GameManager.Instance.players.Count; // Lo actualiza
         }
 
-        if (IsServer)
+        if (IsServer && IsOwner)
         {
-            if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted/* && (GameManager.Instance.currentPlayers > 1)*/)
+            if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted && (GameManager.Instance.currentPlayers > 1))
             {
                 GameManager.Instance.gameStarted = true;
                 _lobby.SetActive(false);
                 GameManager.Instance.circuitManager.SetActive(true);
                 _ui.State = new GameInterfaceState(_ui);
-                GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
-                Debug.Log(GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId).Find("StartPos").GetChild((int)ID).transform.position);
-                transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId).Find("StartPos").GetChild((int)ID).transform.position;
+            }
+        }
+
+        if (IsServer)
+        {
+            if (GameManager.Instance.gameStarted)
+            {
+                if (!GameManager.Instance.currentRace.ContainsPlayer(this))
+                {
+                    GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+                    car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
+                    car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
+
+                    PrepareCircuitClientRpc();
+                }
             }
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    [ClientRpc]
+    void PrepareCircuitClientRpc()
+    {
+        GameManager.Instance.gameStarted = true;
+        _lobby.SetActive(false);
+        GameManager.Instance.circuitManager.SetActive(true);
+        _ui.State = new GameInterfaceState(_ui);
 
+        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+    }
 
     //////////////////////////////////
     ////INICIALIZACIÓN DEL JUGADOR////
