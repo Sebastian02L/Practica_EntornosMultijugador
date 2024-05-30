@@ -187,19 +187,21 @@ public class Player : NetworkBehaviour
                     //GameManager.Instance.currentRace.AddPlayer(this); 
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
-
                     PrepareCircuitClientRpc();
                 }
             }
         }
 
         //Cuando todos los jugadores esten en la partida, antes de que comience la carrera, hacemos que no puedan moverse
-        if(IsOwner && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && _playerInput.enabled && countDown == 3)
+        if (IsOwner && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && _playerInput.enabled && countDown == 3 && GameManager.Instance.mapSelectedId != 0)
         {
             _playerInput.enabled = false;
         }
 
-        if(IsServer && !_playerInput.enabled) 
+        //Cuando los jugadores no puedan moverse y se haya escogido un mapa, pasamos a la fase de preparacion de la carrera.
+        //Sin esta condicion GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers,
+        //al ser IsServer, se ejecuta en el Lobby cuando se une un cliente, cosa que no queremos
+        if (IsServer && !_playerInput.enabled && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && countDown >= 0) 
         {
             passedTime += Time.deltaTime;
 
@@ -207,7 +209,6 @@ public class Player : NetworkBehaviour
             if(passedTime >= countFrecuency) 
             {
                 RaceStartingClientRpc(countDown);
-                countDown -= 1;
                 passedTime = 0f;
             }
         }
@@ -219,25 +220,36 @@ public class Player : NetworkBehaviour
     {
         //Buscamos al semaforo del escenario
         Transform LEDS = GameObject.Find("LEDS").transform;
+        _camera.LookAt = LEDS.transform;
+
         switch (phase)
         {
             case 3:
-                LEDS.Find("LED1").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
-                LEDS.Find("LED1/Point Light1").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED1").GetComponent<MeshRenderer>().material.color = new Color(1, 0.8f, 0, 0);
+                LEDS.Find("LED1/Point Light1").GetComponent<Light>().color = new Color(1, 0.8f, 0, 0);
                 break;
 
             case 2:
-                LEDS.Find("LED2").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
-                LEDS.Find("LED2/Point Light2").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED2").GetComponent<MeshRenderer>().material.color = new Color(1, 0.8f, 0, 0);
+                LEDS.Find("LED2/Point Light2").GetComponent<Light>().color = new Color(1, 0.8f, 0, 0);
                 break;
 
             case 1:
-                LEDS.Find("LED3").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
-                LEDS.Find("LED3/Point Light3").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED3").GetComponent<MeshRenderer>().material.color = new Color(1, 0.8f, 0, 0);
+                LEDS.Find("LED3/Point Light3").GetComponent<Light>().color = new Color(1, 0.8f, 0, 0);
                 break;
 
             case 0:
+
+                LEDS.Find("LED1").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED1/Point Light1").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED2").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED2/Point Light2").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED3").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED3/Point Light3").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+
                 GameManager.Instance.player._playerInput.enabled = true;
+                GameManager.Instance.player._camera.LookAt = (GameManager.Instance.player.car.transform);
                 break;
         }
         countDown -= 1;
