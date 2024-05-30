@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RaceController : MonoBehaviour
@@ -19,6 +20,11 @@ public class RaceController : MonoBehaviour
             _debuggingSpheres[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             _debuggingSpheres[i].GetComponent<SphereCollider>().enabled = false;
         }
+
+        foreach(var player in _players)
+        {
+            SpherePlayer(player);
+        }
     }
 
     private void Update()
@@ -32,7 +38,12 @@ public class RaceController : MonoBehaviour
     public void AddPlayer(Player player)
     {
         _players.Add(player);
-        //player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
+    }
+
+    public void SpherePlayer(Player player)
+    {
+        player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
+        //player.gameObject.AddComponent<RecoverComponent>();
     }
 
     public bool ContainsPlayer(Player player)
@@ -67,7 +78,10 @@ public class RaceController : MonoBehaviour
             arcLengths[i] = ComputeCarArcLength(i);
         }
 
-        _players.Sort(new PlayerInfoComparer(arcLengths));  //Esta linea determina el orden de los jugadores
+        _players.OrderBy(x => arcLengths[x.ID]);//Prueba de orden de los jugadores
+
+        print(_players[0].ID);
+        //_players.Sort(new PlayerInfoComparer(arcLengths));  //Esta linea determina el orden de los jugadores
 
         string myRaceOrder = "";
         foreach (var player in _players)
