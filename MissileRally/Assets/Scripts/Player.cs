@@ -70,7 +70,11 @@ public class Player : NetworkBehaviour
 
     SelectCarColorMenu _selectCarColorMenu;
     PlayerReady _playerReadyComponent;
-    public float arcLenght;
+
+    public float arcLength;
+    public float lastArcLength;
+    public bool lineCrossed;
+
     public int actualRacePos;
 
     int countDown = 3;

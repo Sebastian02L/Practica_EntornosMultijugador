@@ -49,34 +49,42 @@ public class RaceController : MonoBehaviour
     {
         return _players.Contains(player);
     }
-
+    
     public void UpdateRaceProgress()
     {
         for (int i = 0; i < _players.Count; ++i)
         {
-            _players[i].arcLenght = ComputeCarArcLength(i);
+            _players[i].arcLength = ComputeCarArcLength(i);
+            if(Mathf.Abs(_players[i].arcLength - _players[i].lastArcLength) > 20) 
+            {
+                _players[i].arcLength = _players[i].lastArcLength;
+                _players[i].lineCrossed = true;
+            }
+            else
+            {
+                _players[i].lastArcLength = _players[i].arcLength;
+                _players[i].lineCrossed = false;
+            }
         }
-
+    
         //Ordenamos la lista de jugadores, segun el valor de su atributo arclength.
         //Esto hace que su orden dentro de ls lista sea el orden de la carrera.
         _players.Sort((x, y) =>
         {
-            if (x.arcLenght < y.arcLenght)
+            if (x.arcLength < y.arcLength)
                 return 1;
             else return -1;
         }); //Esta linea determina el orden de los jugadores
 
-        //Mostramos un string con el orden de carrera (para debuggear)
-        string myRaceOrder = "";
-
         for (int i = 0; i < _players.Count; ++i)
         {
             _players[i].actualRacePos = i + 1;
-
-            myRaceOrder += _players[i].Name + " ";
         }
 
-        //Debug.Log("Race order: " + myRaceOrder);
+        Debug.Log("Arclength del host " + _players[0].arcLength);
+        Debug.Log("LastArclength del host " + _players[0].lastArcLength);
+        Debug.Log("Longitud " + _circuitController.CircuitLength);
+
     }
 
     float ComputeCarArcLength(int id)
@@ -104,8 +112,7 @@ public class RaceController : MonoBehaviour
         }
         else
         {
-            minArcL += _circuitController.CircuitLength *
-                       (_players[id].CurrentLap - 1);
+            minArcL += _circuitController.CircuitLength * (_players[id].CurrentLap - 1);
         }
 
         return minArcL;
