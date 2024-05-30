@@ -156,23 +156,29 @@ public class Player : NetworkBehaviour
         }
 
         if (IsServer && IsOwner)
-        {
+        {   //Cuando mas de la mitad de los jugadores estan listos y hay mas de 1 jugador, la partida debe comenzar
+            //Cuando esto ocurra, el host desde su coche realizara lo siguiente:
             if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted && (GameManager.Instance.currentPlayers > 1))
             {
+                //Marcar en su runtime que el juego ha comenzado
                 GameManager.Instance.gameStarted = true;
+                //Desactivar el lobby y encender el escenario seleccionado a traves de la referencia al circuitManager
                 _lobby.SetActive(false);
                 GameManager.Instance.circuitManager.SetActive(true);
+                //Cambiar la interfaz del host
                 _ui.State = new GameInterfaceState(_ui);
             }
         }
 
+        //Posteriormente, el servidor ejecutara en cada coche de su runtime lo siguiente:
         if (IsServer)
         {
             if (GameManager.Instance.gameStarted)
-            {
+            {   //Si la lista del currentRace no posee al coche
                 if (!GameManager.Instance.currentRace.ContainsPlayer(this))
                 {
-                    GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+                    //Añade al jugador a la lista, lo teletransporta a su posicion correspondiente y ejecuta una llamada rpc
+                    GameManager.Instance.currentRace.AddPlayer(this); 
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
 
@@ -183,15 +189,17 @@ public class Player : NetworkBehaviour
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Este metodo se invoca desde cada coche del runtime del host cuando comienza la partida, para ser ejecutado en ese coche del lado del cliente
     [ClientRpc]
     void PrepareCircuitClientRpc()
     {
+        //Marca en el runtime del cliente que el juego comenzo, apaga el lobby y enciende el mapa seleccionado, cambia la interfaz y agrega el jugador a la carrera
         GameManager.Instance.gameStarted = true;
         _lobby.SetActive(false);
         GameManager.Instance.circuitManager.SetActive(true);
         _ui.State = new GameInterfaceState(_ui);
 
-        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+        GameManager.Instance.currentRace.AddPlayer(this);
     }
 
     //////////////////////////////////
