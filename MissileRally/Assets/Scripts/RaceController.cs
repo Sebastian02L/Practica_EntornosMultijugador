@@ -78,10 +78,17 @@ public class RaceController : MonoBehaviour
             arcLengths[i] = ComputeCarArcLength(i);
         }
 
-        _players.OrderBy(x => arcLengths[x.ID]);//Prueba de orden de los jugadores
+        //_players.OrderBy(x => arcLengths[x.ID]);//Prueba de orden de los jugadores
 
-        print(_players[0].ID);
         //_players.Sort(new PlayerInfoComparer(arcLengths));  //Esta linea determina el orden de los jugadores
+        _players.Sort((x, y) =>
+        {
+            if (arcLengths[x.ID] < arcLengths[y.ID])
+                return 1;
+            else return -1;
+        });
+
+        //print(_players[0].ID + " " + _players[1].ID);
 
         string myRaceOrder = "";
         foreach (var player in _players)
@@ -89,7 +96,7 @@ public class RaceController : MonoBehaviour
             myRaceOrder += player.Name + " ";
         }
 
-        //Debug.Log("Race order: " + myRaceOrder);
+        Debug.Log("Race order: " + myRaceOrder);
     }
 
     float ComputeCarArcLength(int id)

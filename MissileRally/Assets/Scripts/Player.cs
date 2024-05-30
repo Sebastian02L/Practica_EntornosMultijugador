@@ -178,7 +178,7 @@ public class Player : NetworkBehaviour
                 if (!GameManager.Instance.currentRace.ContainsPlayer(this))
                 {
                     //Añade al jugador a la lista, lo teletransporta a su posicion correspondiente y ejecuta una llamada rpc
-                    //GameManager.Instance.currentRace.AddPlayer(this);  CREEMOS QUE NO HACE FALTA, PORQUE YA LO HACE EN EL RPC
+                    GameManager.Instance.currentRace.AddPlayer(this); 
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
 
