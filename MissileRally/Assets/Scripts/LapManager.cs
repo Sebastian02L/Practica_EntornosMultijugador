@@ -24,23 +24,20 @@ public class LapManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponentInParent<PlayerInput>().enabled == true)
+        if (other.gameObject.GetComponentInParent<PlayerInput>() != null && other.gameObject.GetComponentInParent<PlayerInput>().enabled == true)
         {
             if (startLine.enabled)
             {
-                Debug.Log("Desactivar");
                 startLine.enabled = false;
                 firstCheck.enabled = true;
                 GameManager.Instance.player.UpdateCurrentLapServerRpc();
-            }
 
-            if (firstCheck.enabled)
+            }else if (firstCheck.enabled)
             {
                 firstCheck.enabled = false;
                 secondCheck.enabled = true;
-            }
 
-            if (secondCheck.enabled)
+            }else if (secondCheck.enabled)
             {
                 secondCheck.enabled = false;
                 startLine.enabled = true;
