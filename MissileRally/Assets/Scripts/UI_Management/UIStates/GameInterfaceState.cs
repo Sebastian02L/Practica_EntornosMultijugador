@@ -7,7 +7,9 @@ public class GameInterfaceState : AUIState
 {
     GameObject gameUI;
     TextMeshProUGUI speedText;
+    TextMeshProUGUI positionText;
     CarController carController;
+    int racePosition;
 
     public GameInterfaceState(IUI UI) : base(UI)
     {
@@ -17,6 +19,7 @@ public class GameInterfaceState : AUIState
     {
         gameUI = UI.Canvas.transform.Find("GameUI").gameObject;
         speedText = gameUI.transform.Find("Panel").Find("SpeedText").GetComponent<TextMeshProUGUI>();
+        positionText = gameUI.transform.Find("PanelPos").Find("PositionText").GetComponent<TextMeshProUGUI>();
         gameUI.SetActive(true);
         carController = GameManager.Instance.player.car.GetComponent<CarController>();
     }
@@ -38,5 +41,8 @@ public class GameInterfaceState : AUIState
             int speed = (int)carController.Speed * (3600/1000);
             speedText.text = speed.ToString() + " km/h";
         }
+
+        racePosition = GameManager.Instance.player.actualRacePos;
+        positionText.text = racePosition.ToString() + "º";
     }
 }

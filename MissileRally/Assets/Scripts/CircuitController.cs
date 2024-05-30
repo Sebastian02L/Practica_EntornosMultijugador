@@ -49,8 +49,8 @@ public class CircuitController : MonoBehaviour
         // Check segments for valid projections of the point
         for (int i = 0; i < _pathPos.Length - 1; ++i)
         {
-            Vector3 pathVec = (_pathPos[i + 1] - _pathPos[i]).normalized;
-            float segLength = (_pathPos[i + 1] - _pathPos[i]).magnitude;
+            Vector3 pathVec = GetSegment(i).normalized;
+            float segLength = GetSegment(i).magnitude;
 
 
             Vector3 carVec = (posIn - _pathPos[i]);

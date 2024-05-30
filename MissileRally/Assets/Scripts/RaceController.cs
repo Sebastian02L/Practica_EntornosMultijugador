@@ -43,7 +43,6 @@ public class RaceController : MonoBehaviour
     public void SpherePlayer(Player player)
     {
         player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
-        //player.gameObject.AddComponent<RecoverComponent>();
     }
 
     public bool ContainsPlayer(Player player)
@@ -51,36 +50,22 @@ public class RaceController : MonoBehaviour
         return _players.Contains(player);
     }
 
-    private class PlayerInfoComparer : Comparer<Player>
-    {
-        List<Player> players;
-
-        public PlayerInfoComparer(List<Player> playersP)
-        {
-            players = playersP;
-        }
-
-        public override int Compare(Player x, Player y)
-        {
-            if (x.arcLenght < y.arcLenght)
-                return 1;
-            else return -1;
-        }
-    }
-
     public void UpdateRaceProgress()
     {
-        // Update car arc-lengths
-        float[] arcLengths = new float[_players.Count];
-
         for (int i = 0; i < _players.Count; ++i)
         {
             _players[i].arcLenght = ComputeCarArcLength(i);
         }
+
         //Ordenamos la lista de jugadores, segun el valor de su atributo arclength.
         //Esto hace que su orden dentro de ls lista sea el orden de la carrera.
-        _players.Sort(new PlayerInfoComparer(_players));  //Esta linea determina el orden de los jugadores
- 
+        _players.Sort((x, y) =>
+        {
+            if (x.arcLenght < y.arcLenght)
+                return 1;
+            else return -1;
+        }); //Esta linea determina el orden de los jugadores
+
         //Mostramos un string con el orden de carrera (para debuggear)
         string myRaceOrder = "";
 

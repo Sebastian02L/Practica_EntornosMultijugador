@@ -195,7 +195,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     void PrepareCircuitClientRpc()
     {
-        Debug.Log("Ejecutando desde el coche con nombre" + this.name);
         GameManager.Instance.currentRace.AddPlayer(this);
 
         if (IsOwner)
