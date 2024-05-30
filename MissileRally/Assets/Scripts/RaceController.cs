@@ -37,6 +37,7 @@ public class RaceController : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
+        Debug.Log("Añadiendo al jugador: " + player.ID);
         _players.Add(player);
     }
 
@@ -70,6 +71,7 @@ public class RaceController : MonoBehaviour
 
     public void UpdateRaceProgress()
     {
+        Debug.Log("Numero de jugadores en la lista: " + _players.Count);
         // Update car arc-lengths
         float[] arcLengths = new float[_players.Count];
 
@@ -91,9 +93,11 @@ public class RaceController : MonoBehaviour
         //print(_players[0].ID + " " + _players[1].ID);
 
         string myRaceOrder = "";
-        foreach (var player in _players)
+        foreach (Player player in _players)
         {
+            Debug.Log("Jugador iterado: " + player.ID + "y nombre" + player.Name);
             myRaceOrder += player.Name + " ";
+            Debug.Log("Valor post aumento" + myRaceOrder);
         }
 
         Debug.Log("Race order: " + myRaceOrder);

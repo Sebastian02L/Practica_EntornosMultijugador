@@ -178,7 +178,7 @@ public class Player : NetworkBehaviour
                 if (!GameManager.Instance.currentRace.ContainsPlayer(this))
                 {
                     //Añade al jugador a la lista, lo teletransporta a su posicion correspondiente y ejecuta una llamada rpc
-                    GameManager.Instance.currentRace.AddPlayer(this); 
+                    //GameManager.Instance.currentRace.AddPlayer(this); 
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
 
@@ -193,6 +193,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     void PrepareCircuitClientRpc()
     {
+        Debug.Log("Ejecutando desde el coche con nombre" + this.name);
         GameManager.Instance.currentRace.AddPlayer(this);
 
         if (IsOwner)
@@ -265,6 +266,7 @@ public class Player : NetworkBehaviour
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
         GameManager.Instance.players.TryAdd(id, data);
+        Name = data.name;
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
 
