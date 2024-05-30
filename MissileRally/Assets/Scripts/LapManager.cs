@@ -12,7 +12,8 @@ public class LapManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        firstCheck.enabled = false;
+        startLine.enabled = false;
+        firstCheck.enabled = true;
         secondCheck.enabled = false;
     }
 

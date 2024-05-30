@@ -50,7 +50,7 @@ public class Player : NetworkBehaviour
     // Network Data
     public PlayerData data;
     public NetworkVariable<int> mapSelectedId = new NetworkVariable<int>();
-    public NetworkVariable<int> currentLapNet = new NetworkVariable<int>();
+    public NetworkVariable<int> currentLapNet = new NetworkVariable<int>(1);
 
     // Player Info
     public string Name { get; set; }
@@ -60,7 +60,7 @@ public class Player : NetworkBehaviour
     // Race Info
     public GameObject car;
     public int CurrentPosition { get; set; }
-    public int CurrentLap { get; set; } //Vuelta en la que está
+    public int CurrentLap = 1; //Vuelta en la que está
 
     GameObject _lobby;
 
