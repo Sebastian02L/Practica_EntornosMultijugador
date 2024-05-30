@@ -61,6 +61,8 @@ public class Player : NetworkBehaviour
     public int CurrentPosition { get; set; }
     public int CurrentLap { get; set; } //Vuelta en la que está
 
+    GameObject _lobby;
+
     UIManager _ui;
     PlayerInput _playerInput;
     CinemachineVirtualCamera _camera;
@@ -82,6 +84,8 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Start()
     {
+        _lobby = GameObject.Find("Lobby");
+
         _ui = GameObject.Find("@UIManager").GetComponent<UIManager>();
         _camera = FindAnyObjectByType<CinemachineVirtualCamera>(); //Guardamos una referencia de la camara de CineMachine, buscandola en la jerarquia.
 
@@ -89,8 +93,6 @@ public class Player : NetworkBehaviour
         _playerInput = GetComponent<PlayerInput>();       //Guardamos la referencia del PlayerInput del prefab del jugador.
 
         ID = GetComponent<NetworkObject>().OwnerClientId;
-
-        GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
 
         //Nos interesa que un jugador pueda mover el coche generado por su juego, no el de los demas, por lo tanto, si es propietario del coche:
         if (IsOwner)
@@ -151,6 +153,20 @@ public class Player : NetworkBehaviour
         if (GameManager.Instance.currentPlayers != GameManager.Instance.players.Count) // Si el valor de currentPlayers es distinto del numero de players del diccionario
         {
             GameManager.Instance.currentPlayers = GameManager.Instance.players.Count; // Lo actualiza
+        }
+
+        if (IsServer)
+        {
+            if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted/* && (GameManager.Instance.currentPlayers > 1)*/)
+            {
+                GameManager.Instance.gameStarted = true;
+                _lobby.SetActive(false);
+                GameManager.Instance.circuitManager.SetActive(true);
+                _ui.State = new GameInterfaceState(_ui);
+                GameManager.Instance.currentRace.AddPlayer(this); //Agregamos un jugador nuevo a la carrera.
+                Debug.Log(GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId).Find("StartPos").GetChild((int)ID).transform.position);
+                transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId).Find("StartPos").GetChild((int)ID).transform.position;
+            }
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

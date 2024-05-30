@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public ConcurrentDictionary<ulong, PlayerData> players = new ConcurrentDictionary<ulong, PlayerData>();
 
+    public bool gameStarted = false;
+
     public int numPlayers = 6;
 
     public int currentPlayers;
@@ -17,6 +19,8 @@ public class GameManager : MonoBehaviour
     public int mapSelectedId = 0;
 
     public RaceController currentRace;
+
+    public GameObject circuitManager;
 
     public static GameManager Instance { get; private set; }
 

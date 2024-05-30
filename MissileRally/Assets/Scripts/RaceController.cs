@@ -32,7 +32,7 @@ public class RaceController : MonoBehaviour
     public void AddPlayer(Player player)
     {
         _players.Add(player);
-        player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
+        //player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
     }
 
     private class PlayerInfoComparer : Comparer<Player>

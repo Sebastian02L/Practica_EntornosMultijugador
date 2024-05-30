@@ -14,6 +14,7 @@ public class CircuitController : MonoBehaviour
 
     void Start()
     {
+        transform.GetChild(GameManager.Instance.mapSelectedId - 1).gameObject.SetActive(true);
         _circuitPath = GetComponentInChildren<LineRenderer>();
 
         int numPoints = _circuitPath.positionCount;
