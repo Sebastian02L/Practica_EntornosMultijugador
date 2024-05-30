@@ -37,7 +37,6 @@ public class RaceController : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
-        Debug.Log("Añadiendo al jugador: " + player.ID);
         _players.Add(player);
     }
 
@@ -54,16 +53,16 @@ public class RaceController : MonoBehaviour
 
     private class PlayerInfoComparer : Comparer<Player>
     {
-        readonly float[] _arcLengths;
+        List<Player> players;
 
-        public PlayerInfoComparer(float[] arcLengths)
+        public PlayerInfoComparer(List<Player> playersP)
         {
-            _arcLengths = arcLengths;
+            players = playersP;
         }
 
         public override int Compare(Player x, Player y)
         {
-            if (_arcLengths[x.ID] < _arcLengths[y.ID])
+            if (x.arcLenght < y.arcLenght)
                 return 1;
             else return -1;
         }
@@ -71,36 +70,28 @@ public class RaceController : MonoBehaviour
 
     public void UpdateRaceProgress()
     {
-        Debug.Log("Numero de jugadores en la lista: " + _players.Count);
         // Update car arc-lengths
         float[] arcLengths = new float[_players.Count];
 
         for (int i = 0; i < _players.Count; ++i)
         {
-            arcLengths[i] = ComputeCarArcLength(i);
+            _players[i].arcLenght = ComputeCarArcLength(i);
         }
-
-        //_players.OrderBy(x => arcLengths[x.ID]);//Prueba de orden de los jugadores
-
-        //_players.Sort(new PlayerInfoComparer(arcLengths));  //Esta linea determina el orden de los jugadores
-        _players.Sort((x, y) =>
-        {
-            if (arcLengths[x.ID] < arcLengths[y.ID])
-                return 1;
-            else return -1;
-        });
-
-        //print(_players[0].ID + " " + _players[1].ID);
-
+        //Ordenamos la lista de jugadores, segun el valor de su atributo arclength.
+        //Esto hace que su orden dentro de ls lista sea el orden de la carrera.
+        _players.Sort(new PlayerInfoComparer(_players));  //Esta linea determina el orden de los jugadores
+ 
+        //Mostramos un string con el orden de carrera (para debuggear)
         string myRaceOrder = "";
-        foreach (Player player in _players)
+
+        for (int i = 0; i < _players.Count; ++i)
         {
-            Debug.Log("Jugador iterado: " + player.ID + "y nombre" + player.Name);
-            myRaceOrder += player.Name + " ";
-            Debug.Log("Valor post aumento" + myRaceOrder);
+            _players[i].actualRacePos = i + 1;
+
+            myRaceOrder += _players[i].Name + " ";
         }
 
-        Debug.Log("Race order: " + myRaceOrder);
+        //Debug.Log("Race order: " + myRaceOrder);
     }
 
     float ComputeCarArcLength(int id)
@@ -111,14 +102,17 @@ public class RaceController : MonoBehaviour
         Vector3 carPos = Vector3.zero;
         if (this._players[id].car)
         {
-            carPos = this._players[id].car.transform.position;
+            carPos = this._players[id].car.transform.position;  //Inicializa con la posicion del coche
         }
 
+        //Calcula la longitud del arco 
         float minArcL =
             this._circuitController.ComputeClosestPointArcLength(carPos, out _, out var carProj, out _);
 
+        //Actualiza la posicion de la esfera en la linea
         this._debuggingSpheres[id].transform.position = carProj;
 
+        //Ajusta la longitud del arco segun la vuelta en la que se encuentra el coche
         if (this._players[id].CurrentLap == 0)
         {
             minArcL -= _circuitController.CircuitLength;
