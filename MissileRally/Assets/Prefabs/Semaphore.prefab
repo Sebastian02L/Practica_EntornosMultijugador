@@ -456,7 +456,7 @@ GameObject:
   - component: {fileID: 3110775964389582859}
   - component: {fileID: 1495222490314295818}
   m_Layer: 0
-  m_Name: Point Light
+  m_Name: Point Light1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -488,8 +488,8 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.8396226, g: 0, b: 0, a: 1}
-  m_Intensity: 0.5
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Intensity: 10
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 8956818569647242432}
   - component: {fileID: 3715262399610980510}
   m_Layer: 0
-  m_Name: Point Light (2)
+  m_Name: Point Light3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -749,8 +749,8 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.8396226, g: 0, b: 0, a: 1}
-  m_Intensity: 0.5
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Intensity: 10
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -894,7 +894,7 @@ GameObject:
   - component: {fileID: 8527096447410913322}
   - component: {fileID: 7482670532868402498}
   m_Layer: 0
-  m_Name: Point Light
+  m_Name: Point Light2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,8 +926,8 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.8396226, g: 0, b: 0, a: 1}
-  m_Intensity: 0.5
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Intensity: 10
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

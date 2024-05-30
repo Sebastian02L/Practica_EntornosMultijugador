@@ -6,7 +6,7 @@ public class RaceController : MonoBehaviour
 {
     public int numPlayers;
 
-    private readonly List<Player> _players = new(6);
+    public readonly List<Player> _players = new(6);
     private CircuitController _circuitController;
     private GameObject[] _debuggingSpheres;
 

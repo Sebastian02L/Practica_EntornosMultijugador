@@ -1910,7 +1910,7 @@ Transform:
   - {fileID: 83981736049474630}
   - {fileID: 2757367774646813502}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &112487141836553763
 LineRenderer:
@@ -25654,6 +25654,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5728191895117530069}
     m_Modifications:
+    - target: {fileID: 1495222490314295818, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495222490314295818, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2654278072609540678, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
       propertyPath: m_Name
       value: Semaphore
@@ -25709,6 +25717,30 @@ PrefabInstance:
     - target: {fileID: 2654278072609540698, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3715262399610980510, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3715262399610980510, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4448246072805447303, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4ee9368958849e147aa70fa7371ead4f, type: 2}
+    - target: {fileID: 4667963141979981165, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d671717bda0359143b3e537a91bcfd8f, type: 2}
+    - target: {fileID: 7482670532868402498, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7482670532868402498, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2654278072609540701, guid: 50505a9ac7c324944a9d25d6425da47e, type: 3}

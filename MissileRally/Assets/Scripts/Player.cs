@@ -72,6 +72,10 @@ public class Player : NetworkBehaviour
     public float arcLenght;
     public int actualRacePos;
 
+    int countDown = 3;
+    float countFrecuency = 1.5f;
+    float passedTime = 0f;
+
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
 
@@ -188,11 +192,59 @@ public class Player : NetworkBehaviour
                 }
             }
         }
+
+        //Cuando todos los jugadores esten en la partida, antes de que comience la carrera, hacemos que no puedan moverse
+        if(IsOwner && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && _playerInput.enabled && countDown == 3)
+        {
+            _playerInput.enabled = false;
+        }
+
+        if(IsServer && !_playerInput.enabled) 
+        {
+            passedTime += Time.deltaTime;
+
+            //Cada 1.5 segundos
+            if(passedTime >= countFrecuency) 
+            {
+                RaceStartingClientRpc(countDown);
+                countDown -= 1;
+                passedTime = 0f;
+            }
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Este metodo se invoca desde cada coche del runtime del host cuando comienza la partida, para ser ejecutado en ese coche del lado del cliente
     [ClientRpc]
+    void RaceStartingClientRpc(int phase)
+    {
+        //Buscamos al semaforo del escenario
+        Transform LEDS = GameObject.Find("LEDS").transform;
+        switch (phase)
+        {
+            case 3:
+                LEDS.Find("LED1").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED1/Point Light1").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                break;
+
+            case 2:
+                LEDS.Find("LED2").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED2/Point Light2").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                break;
+
+            case 1:
+                LEDS.Find("LED3").GetComponent<MeshRenderer>().material.color = new Color(0, 0.7f, 0, 0);
+                LEDS.Find("LED3/Point Light3").GetComponent<Light>().color = new Color(0, 0.7f, 0, 0);
+                break;
+
+            case 0:
+                GameManager.Instance.player._playerInput.enabled = true;
+                break;
+        }
+        countDown -= 1;
+    }
+
+    //Este metodo se invoca desde cada coche del runtime del host cuando comienza la partida, para ser ejecutado en ese coche del lado del cliente
+    [ClientRpc(RequireOwnership = false)]
     void PrepareCircuitClientRpc()
     {
         GameManager.Instance.currentRace.AddPlayer(this);
