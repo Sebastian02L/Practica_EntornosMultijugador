@@ -25,6 +25,7 @@ public class LapManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Solo el Owner del coche puede ejecutar esto, al comprobar que su PlayerInput este activo
         if (other.gameObject.GetComponentInParent<PlayerInput>() != null && other.gameObject.GetComponentInParent<PlayerInput>().enabled == true)
         {
             if (startLine.enabled && !GameManager.Instance.player.lineCrossed)

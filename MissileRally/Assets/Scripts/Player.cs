@@ -52,6 +52,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> mapSelectedId = new NetworkVariable<int>();
     public NetworkVariable<int> currentLapNet = new NetworkVariable<int>(1);
     public NetworkVariable<float> gameplayTimer = new NetworkVariable<float>();
+    public NetworkVariable<float> finalTime = new NetworkVariable<float>();
 
     // Player Info
     public string Name { get; set; }
@@ -88,6 +89,8 @@ public class Player : NetworkBehaviour
     float countFrecuency = 1.5f;
     float passedTime = 0f;
 
+    float auxiliarTimer = 0;
+
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
 
@@ -103,6 +106,7 @@ public class Player : NetworkBehaviour
     public void Start()
     {
         currentLapNet.OnValueChanged += OnCurrentLapChange;
+        finalTime.OnValueChanged += OnFinalTimeChange;
 
         _lobby = GameObject.Find("Lobby");
 
@@ -152,7 +156,6 @@ public class Player : NetworkBehaviour
         {
             GameManager.Instance.mapSelectedId = mapSelectedId.Value;
             mapSelectedId.OnValueChanged += OnMapSelected;
-            print("El coche se sucribio al cambio");
             gameplayTimer.OnValueChanged += OnGameplayTimerChange;
         }
     }
@@ -232,11 +235,16 @@ public class Player : NetworkBehaviour
         //A partir de esta condicion, la carrera ya ha empezado
         if(IsOwner && _playerInput.enabled && countDown < 0)
         {
+            Debug.Log("Entré");
             //El servidor llevara el tiempo de la carrera y en los runtimes se obtendrá ese valor.
-            if(IsServer && IsOwner)
+            //Una variable auxiliar lleva el tiempo total, luego se redondea y se asigna a la variable de red del coche del host, de manera que en el resto de runtimes se actualizara
+            //el timepo. En el Runtime del propio servidor diretamente asignamos el valor al GameManager
+            if (IsServer)
             {
-                print("Cambiando el valor de la variable");
-                gameplayTimer.Value += (float) Math.Round(Time.deltaTime, 2);
+                auxiliarTimer += Time.deltaTime;
+                Debug.Log("Actualizando valor del tiempo");
+                gameplayTimer.Value = (float) Math.Round(auxiliarTimer, 2);
+                GameManager.Instance.gameplayTimer = gameplayTimer.Value;
             }
 
             if (arcLength < lastArcLengthWD)
@@ -542,10 +550,9 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     public void UpdateCurrentLapServerRpc()
     {
-        Debug.Log(currentLapNet.Value);
         currentLapNet.Value += 1;
         CurrentLap += 1;
-        Debug.Log(currentLapNet.Value);
+        SetPartialTimes();
     }
 
     void OnCurrentLapChange(int previousValue, int newValue)
@@ -553,14 +560,57 @@ public class Player : NetworkBehaviour
         if (IsServer) { return; }
 
         CurrentLap = newValue;
-        Debug.Log(CurrentLap);
+        SetPartialTimes();
     }
 
     void OnGameplayTimerChange(float previousValue, float newValue)
     {
         if (IsServer) { return; }
-
         GameManager.Instance.gameplayTimer = newValue;
-        Debug.Log(newValue);
+    }
+
+    //Metodo que inserta en la interfaz el tiempo de cada vuelta cuando el jugador cruza correctamente la vuelta
+    void SetPartialTimes()
+    {
+        if (IsOwner)
+        {
+            switch (CurrentLap)
+            {
+                case 2:
+                    GameObject.Find("GameUI").transform.Find("PanelTimes").Find("TimeLapOne").GetComponent<TextMeshProUGUI>().text = $"Time Lap 1: {GameManager.Instance.gameplayTimer} s";
+                    break;
+
+                case 3:
+                    GameObject.Find("GameUI").transform.Find("PanelTimes").Find("TimeLapTwo").GetComponent<TextMeshProUGUI>().text = $"Time Lap 2: {GameManager.Instance.gameplayTimer} s";
+                    break;
+
+                case 4:
+                    //Si el host completa el circuito, se almacena el tiempo que le ha llevado hacerlo
+                    if (IsServer)
+                    {
+                        finalTime.Value = gameplayTimer.Value;
+                    }
+                    else //Cada cliente avisa al host que ha completado la carrera, pasandole el tiempo que le ha llevado hacer el circuito
+                    {
+                        SendFinalTimeServerRpc(GameManager.Instance.gameplayTimer);
+                    }
+                    GameObject.Find("GameUI").transform.Find("PanelTimes").Find("TimeLapThree").GetComponent<TextMeshProUGUI>().text = $"Time Lap 3: {finalTime.Value} s";
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    [ServerRpc]
+    void SendFinalTimeServerRpc(float totalTime)
+    {
+        finalTime.Value = totalTime;
+    }
+
+    void OnFinalTimeChange(float previousValue, float newValue)
+    {
+        finalTime.Value = newValue;
+        Debug.Log("Timepo final del jugador " + Name + ": " + finalTime.Value);
     }
 }

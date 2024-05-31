@@ -27,9 +27,6 @@ public class GameInterfaceState : AUIState
         positionText = gameUI.transform.Find("PanelPos").Find("PositionText").GetComponent<TextMeshProUGUI>();
         lapText = gameUI.transform.Find("PanelLap").Find("LapCounter").GetComponent<TextMeshProUGUI>();
         totalTimeText = gameUI.transform.Find("PanelTimes").Find("TotalTime").GetComponent<TextMeshProUGUI>();
-        lapOneTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapOne").GetComponent<TextMeshProUGUI>();
-        lapTwoTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapTwo").GetComponent<TextMeshProUGUI>();
-        lapThreeTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapThree").GetComponent<TextMeshProUGUI>();
 
         gameUI.SetActive(true);
         carController = GameManager.Instance.player.car.GetComponent<CarController>();
