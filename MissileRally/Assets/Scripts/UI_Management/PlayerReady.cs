@@ -8,19 +8,17 @@ using UnityEngine.UI;
 
 public class PlayerReady : MonoBehaviour
 {
-    UIManager manager;
-    public event Action playerReady;
-    float clickCooldown = 1f;
-    float timePassed = 0f;
-    bool clicked = false;
-    public Button readyButton;
-    TextMeshProUGUI buttonText;
-    bool buttonAvailable = false;
+    public event Action playerReady; // Evento que se activa cuando el jugador pulsa el botón con el texto "Ready"
+    float clickCooldown = 1f; // Valor de cooldown para pulsar el botón "Ready"
+    float timePassed = 0f; // Tiempo pasado desde la última pulsación del botón 
+    bool clicked = false; // Indica si se ha pulsado el botón o no
+    public Button readyButton; // Referencia al botón
+    TextMeshProUGUI buttonText; // Texto del botón
+    bool buttonAvailable = false; // Indica si el botón está disponible para pulsar
 
     private void Start()
     {
-        manager = GameObject.Find("@UIManager").GetComponent<UIManager>();
-        buttonText = readyButton.GetComponentInChildren<TextMeshProUGUI>();
+        buttonText = readyButton.GetComponentInChildren<TextMeshProUGUI>(); // Guardamos la referencia del botón
     }
 
     private void Update()
