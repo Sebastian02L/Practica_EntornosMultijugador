@@ -59,7 +59,10 @@ public class RecoverComponent : NetworkBehaviour
                 car.transform.up = Vector3.up;
                 car.transform.LookAt(forwardDirection);
                 car.transform.Rotate(Vector3.left, -20);
-                car.transform.position = recoverPosition.position;
+                if(recoverPosition != null)
+                {
+                    car.transform.position = recoverPosition.position;
+                }
                 recover = false;
             }
 
