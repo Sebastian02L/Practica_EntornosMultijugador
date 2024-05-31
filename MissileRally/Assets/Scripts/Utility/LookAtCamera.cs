@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//COMPONENTE QUE SIRVE PARA HACER QUE UN OBJETO MIRE A LA CÁMARA (USADO PARA EL CANVAS DEL NOMBRE DEL JUGADOR)
 public class LookAtCamera : MonoBehaviour
 {
     Camera camara;
