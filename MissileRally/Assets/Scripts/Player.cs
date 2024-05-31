@@ -337,8 +337,6 @@ public class Player : NetworkBehaviour
     [ClientRpc(RequireOwnership = false)]
     void PrepareCircuitClientRpc()
     {
-        GameManager.Instance.currentRace.AddPlayer(this);
-
         if (IsOwner)
         {
             //Marca en el runtime del cliente que el juego comenzo, apaga el lobby y enciende el mapa seleccionado, cambia la interfaz y agrega el jugador a la carrera
@@ -347,6 +345,8 @@ public class Player : NetworkBehaviour
             GameManager.Instance.circuitManager.SetActive(true);
             _ui.State = new GameInterfaceState(_ui);
         }
+
+        GameManager.Instance.currentRace.AddPlayer(this);
     }
 
     //////////////////////////////////
