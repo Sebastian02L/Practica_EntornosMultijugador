@@ -66,10 +66,6 @@ public class RecoverComponent : NetworkBehaviour
             //Si recover está en falso, significa que el jugador finalmente no está volcado, por lo tanto, ponemos el contador a 0
             if (!recover) activeRecover = 0;
         }
-        else
-        {
-            Debug.Log("No soy server");
-        }
     }
 
     [ServerRpc]

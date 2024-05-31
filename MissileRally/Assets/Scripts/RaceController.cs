@@ -83,12 +83,6 @@ public class RaceController : MonoBehaviour
         {
             _players[i].actualRacePos = i + 1;
         }
-
-        for (int i = 0; i < _players.Count; ++i)
-        {
-            print("Posicion "+ i + _players[i].ID);
-        }
-
     }
 
     float ComputeCarArcLength(int id)

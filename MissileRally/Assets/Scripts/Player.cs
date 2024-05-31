@@ -239,14 +239,12 @@ public class Player : NetworkBehaviour
         //A partir de esta condicion, la carrera ya ha empezado
         if(IsOwner && _playerInput.enabled && countDown <= 0)
         {
-            Debug.Log("Entré");
             //El servidor llevara el tiempo de la carrera y en los runtimes se obtendrá ese valor.
             //Una variable auxiliar lleva el tiempo total, luego se redondea y se asigna a la variable de red del coche del host, de manera que en el resto de runtimes se actualizara
             //el timepo. En el Runtime del propio servidor diretamente asignamos el valor al GameManager
             if (IsServer)
             {
                 auxiliarTimer += Time.deltaTime;
-                Debug.Log("Actualizando valor del tiempo");
                 gameplayTimer.Value = (float) Math.Round(auxiliarTimer, 2);
                 GameManager.Instance.gameplayTimer = gameplayTimer.Value;
             }
@@ -629,7 +627,6 @@ public class Player : NetworkBehaviour
     void OnFinalTimeChange(float previousValue, float newValue)
     {
         finalTime.Value = newValue;
-        Debug.Log("Timepo final del jugador " + Name + ": " + finalTime.Value);
     }
 
     [ClientRpc]
@@ -637,6 +634,8 @@ public class Player : NetworkBehaviour
     {
         this.arcLength = arcLength;
         GameManager.Instance.playersFinished += 1;
+        _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
+        _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
     }
 
     void OnFinished(bool previousValue, bool newValue)
