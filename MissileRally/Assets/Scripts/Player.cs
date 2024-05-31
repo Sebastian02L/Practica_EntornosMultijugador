@@ -185,7 +185,7 @@ public class Player : NetworkBehaviour
         if (IsServer && IsOwner)
         {   //Cuando mas de la mitad de los jugadores estan listos y hay mas de 1 jugador, la partida debe comenzar
             //Cuando esto ocurra, el host desde su coche realizara lo siguiente:
-            if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted/* && (GameManager.Instance.currentPlayers > 1)*/ && GameManager.Instance.mapSelectedId != 0)
+            if ((GameManager.Instance.readyPlayers >= ((GameManager.Instance.currentPlayers / 2) + 1)) && !GameManager.Instance.gameStarted && (GameManager.Instance.currentPlayers > 1) && GameManager.Instance.mapSelectedId != 0)
             {
                 //Marcar en su runtime que el juego ha comenzado
                 GameManager.Instance.gameStarted = true;

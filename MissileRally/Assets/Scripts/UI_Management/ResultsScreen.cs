@@ -29,8 +29,8 @@ public class ResultsScreen : MonoBehaviour
             }
             else
             {
-                playerNames[0].text = $"{1}. {player.Name}";
-                playerTimes[0].text = $"Por Abandono";
+                playerNames[0].text = "1. Host";
+                playerTimes[0].text = "Por Abandono";
             }
         }
 
