@@ -72,7 +72,12 @@ public class Player : NetworkBehaviour
     PlayerReady _playerReadyComponent;
 
     public float arcLength;
+    public float lastArcLengthWD;
     public float lastArcLength;
+
+    public float wdLimit = 2.5f;
+    public float wdCounter;
+    public bool wrongDirection;
     public bool lineCrossed;
 
     public int actualRacePos;
@@ -194,6 +199,7 @@ public class Player : NetworkBehaviour
                     //GameManager.Instance.currentRace.AddPlayer(this); 
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
+                    lastArcLengthWD = arcLength;
                     PrepareCircuitClientRpc();
                 }
             }
@@ -218,6 +224,42 @@ public class Player : NetworkBehaviour
                 RaceStartingClientRpc(countDown);
                 passedTime = 0f;
             }
+        }
+
+        if(IsOwner && _playerInput.enabled && countDown < 0)
+        {
+            if (arcLength < lastArcLengthWD)
+            {
+                wrongDirection = true;
+            }
+            else
+            {
+
+                lastArcLengthWD = arcLength;
+                wrongDirection = false;
+            }
+
+            if (Mathf.Abs(arcLength - lastArcLength) > 20)
+            {
+                lastArcLengthWD = lastArcLength + 1;
+            }
+
+            if (wrongDirection)
+            {
+                wdCounter -= Time.deltaTime;
+                if (wdCounter < 0)
+                {
+                    GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                wdCounter = wdLimit;
+                GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(false);
+            }
+
+            
+            
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
