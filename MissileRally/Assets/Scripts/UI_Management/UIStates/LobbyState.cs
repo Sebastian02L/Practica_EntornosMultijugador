@@ -36,8 +36,6 @@ public class LobbyState : AUIState
 
     public override void Exit()
     {
-        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado").gameObject.SetActive(false);
-        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado_Panel").gameObject.SetActive(false);
         lobbyInterface.SetActive(false);
     }
 

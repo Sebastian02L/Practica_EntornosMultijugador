@@ -334,7 +334,7 @@ public class Player : NetworkBehaviour
     }
 
     //Este metodo se invoca desde cada coche del runtime del host cuando comienza la partida, para ser ejecutado en ese coche del lado del cliente
-    [ClientRpc(RequireOwnership = false)]
+    [ClientRpc]
     void PrepareCircuitClientRpc()
     {
         if (IsOwner)
@@ -345,6 +345,9 @@ public class Player : NetworkBehaviour
             GameManager.Instance.circuitManager.SetActive(true);
             _ui.State = new GameInterfaceState(_ui);
         }
+        //Apagamos los carteles de Ready de los jugadores, para que en la carrera solo veamos sus nombres
+        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado").gameObject.SetActive(false);
+        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado_Panel").gameObject.SetActive(false);
 
         GameManager.Instance.currentRace.AddPlayer(this);
     }
