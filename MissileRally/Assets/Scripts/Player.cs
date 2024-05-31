@@ -346,8 +346,8 @@ public class Player : NetworkBehaviour
             _ui.State = new GameInterfaceState(_ui);
         }
         //Apagamos los carteles de Ready de los jugadores, para que en la carrera solo veamos sus nombres
-        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado").gameObject.SetActive(false);
-        GameManager.Instance.player.car.transform.Find("MiniCanvas/Estado_Panel").gameObject.SetActive(false);
+        car.transform.Find("MiniCanvas/Estado").gameObject.SetActive(false);
+        car.transform.Find("MiniCanvas/Estado_Panel").gameObject.SetActive(false);
 
         GameManager.Instance.currentRace.AddPlayer(this);
     }
