@@ -11,6 +11,7 @@ public class ResultsState : AUIState
     {
     }
 
+    // Al entrar en este estado se activa la interfaz de resultados para que sea visible
     public override void Enter()
     {
         resultsUI = UI.Canvas.transform.Find("ResultsUI").gameObject;
