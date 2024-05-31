@@ -9,8 +9,9 @@ public class RecoverComponent : NetworkBehaviour
     float currentTime = 0.0f;        //Contador del tiempo pasado desde el ultimo chequeo realizado
     float activeRecover = 0.0f;      //Temporizador del periodo de gracia
     bool recover = false;            //Variable que indica si el coche puede recuperarse o no
-    public Transform recoverPosition;       //Referencia a la transformada de la esfera asociada al jugador
+    public Transform recoverPosition;//Referencia a la transformada de la esfera asociada al jugador
     public GameObject car;
+    public bool outOfCircuit = false;
 
     //En el Start, guardamos la referencia a la esfera blanca asociada al jugador
     private void Start()
@@ -26,6 +27,13 @@ public class RecoverComponent : NetworkBehaviour
     {
         if(IsServer)
         {
+            //Si ha colisionado con los colliders que estan fuera de los mapas, debe recuperarlo inmediatamente.
+            if(outOfCircuit)
+            {
+                RecoverCar();
+                outOfCircuit = false;
+            }
+
             recoverPosition = recoverPosition == null ? gameObject.GetComponent<Player>().spherePosition : recoverPosition;
 
             currentTime += Time.deltaTime;      //Aumentamos el tiempo pasado desde el último chequeo
@@ -55,15 +63,7 @@ public class RecoverComponent : NetworkBehaviour
 
                 //Giramos el coche haciendo coincidir los ejes Y local y del mundo, hacemos que mire hacia delante y le
                 //asignamos a su transformada la posición del punto de recuperacion, el cual es su esfera asociada.
-                Vector3 forwardDirection = transform.forward + transform.position;
-                car.transform.up = Vector3.up;
-                car.transform.LookAt(forwardDirection);
-                car.transform.Rotate(Vector3.left, -20);
-                if(recoverPosition != null)
-                {
-                    car.transform.position = recoverPosition.position;
-                }
-                recover = false;
+                RecoverCar();
             }
 
             //Si recover está en falso, significa que el jugador finalmente no está volcado, por lo tanto, ponemos el contador a 0
@@ -71,15 +71,17 @@ public class RecoverComponent : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    void serverRecoverServerRpc()
+    void RecoverCar()
     {
-        //Giramos el coche haciendo coincidir los ejes Y local y del mundo, hacemos que mire hacia delante y le
-        //asignamos a su transformada la posición del punto de recuperacion, el cual es su esfera asociada.
+        car.GetComponent<Rigidbody>().velocity = new Vector3(0f,0f,0f);
         Vector3 forwardDirection = transform.forward + transform.position;
-        transform.up = Vector3.up;
-        transform.LookAt(forwardDirection);
-        transform.Rotate(Vector3.left, -20);
-        //transform.position = recoverPosition.position;
+        car.transform.up = Vector3.up;
+        car.transform.LookAt(forwardDirection);
+        car.transform.Rotate(Vector3.left, -20);
+        if (recoverPosition != null)
+        {
+            car.transform.position = recoverPosition.position;
+        }
+        recover = false;
     }
 }
