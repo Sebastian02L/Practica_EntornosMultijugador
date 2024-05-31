@@ -81,9 +81,10 @@ public class RaceController : MonoBehaviour
             _players[i].actualRacePos = i + 1;
         }
 
-        Debug.Log("Arclength del host " + _players[0].arcLength);
-        Debug.Log("LastArclength del host " + _players[0].lastArcLength);
-        Debug.Log("Longitud " + _circuitController.CircuitLength);
+        for (int i = 0; i < _players.Count; ++i)
+        {
+            print("Posicion "+ i + _players[i].ID);
+        }
 
     }
 
