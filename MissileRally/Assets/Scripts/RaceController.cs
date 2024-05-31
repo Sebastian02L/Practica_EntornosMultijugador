@@ -16,10 +16,11 @@ public class RaceController : MonoBehaviour
         if (_debuggingSpheres == null)
         {
             _debuggingSpheres = new GameObject[GameManager.Instance.numPlayers];
-            for (int i = 0; i < GameManager.Instance.numPlayers; ++i)
+            for (int i = 0; i < GameManager.Instance.numPlayers; ++i) //Se instancian la esferas de debug (Solo para cuestiones de debugging)
             {
                 _debuggingSpheres[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 _debuggingSpheres[i].GetComponent<SphereCollider>().enabled = false;
+                _debuggingSpheres[i].GetComponent<MeshRenderer>().enabled = false;
             }
         }
     }
@@ -46,17 +47,19 @@ public class RaceController : MonoBehaviour
     {
         for (int i = 0; i < _players.Count; ++i)
         {
-            if (!_players[i].hasFinished)
+            if (!_players[i].hasFinished) //El cálculo solo se hace si el jugador no ha terminado la carrera
             {
                 _players[i].arcLength = ComputeCarArcLength(i);
-                if (Mathf.Abs(_players[i].arcLength - _players[i].lastArcLength) > 20)
+                if (Mathf.Abs(_players[i].arcLength - _players[i].lastArcLength) > 20) 
                 {
-                    _players[i].arcLength = _players[i].lastArcLength;
+                    // Si se produce un cambio muy brusco en el arclenth del jugador quiere decir que ha cruzado la linea de meta pero no ha sumado una vuelta.
+                    // Esto significa que la ha cruzado en el sentido contrario
+                    _players[i].arcLength = _players[i].lastArcLength; // Al ocurrirse el caso, no se actualiza su arcLength y por tanto no seproduce ningun error al calcular las posiciones de los jugadores en la carrera
                     _players[i].lineCrossed = true;
                 }
                 else
                 {
-                    _players[i].lastArcLength = _players[i].arcLength;
+                    _players[i].lastArcLength = _players[i].arcLength;  // lastArcLength lo utilizamos para guardar el valor de arcLength del frame anterior, así se puede comprovar la diferencia producida entre el arcLength nuevo y el antiguo
                     _players[i].lineCrossed = false;
                 }
             }
