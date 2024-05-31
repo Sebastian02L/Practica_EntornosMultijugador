@@ -27,7 +27,7 @@ public class ResultsScreen : MonoBehaviour
                 playerNames[i].text = $"{i + 1}. {player.Name}";
                 playerTimes[i].text = $"Total Time: {player.finalTime.Value} s";
             }
-            else
+            else if(player != null && !player.hasFinished && GameManager.Instance.currentPlayers == 1)
             {
                 playerNames[0].text = "1. Host";
                 playerTimes[0].text = "Por Abandono";
