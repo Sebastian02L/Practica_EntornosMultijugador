@@ -15,20 +15,16 @@ public class SelectMapMenu : MonoBehaviour
         manager = GameObject.Find("@UIManager").GetComponent<UIManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     //Método invocado cuando pulsas sobre la imagen del mapa.
-    public void SelectMap(int map)
+    public void SelectMap(int map) 
     {
         mapSelection = map;
     }
 
+    //Método invocado cuando pulsas el botón de "Vale".
     public void ExitMenu()
     {
+        // Se les da el valor adecuado a las variables del GameManager y se cambia de estado la interfaz
         GameManager.Instance.mapSelectedId = mapSelection;
         GameManager.Instance.player.mapSelectedId.Value = mapSelection;
         manager.State = new LobbyState(manager);
