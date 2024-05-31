@@ -568,7 +568,6 @@ public class Player : NetworkBehaviour
             Rigidbody carRb = car.GetComponent<Rigidbody>();
             carRb.constraints = RigidbodyConstraints.FreezeAll;
             arcLength = float.MaxValue - GameManager.Instance.playersFinished;
-            GameManager.Instance.playersFinished += 1;
             hasFinished = true;
 
             PlayerHasFinishedClientRpc(arcLength, hasFinished);

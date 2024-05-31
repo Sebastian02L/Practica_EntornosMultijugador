@@ -38,7 +38,7 @@ public class ResultsScreen : MonoBehaviour
 
         //Si todos los que hay en la partida han terminado, habilitamos el boton de "Exit Game" o si el numero de jugadores conectados es distinto
         //cuando ha finalizado la carrera
-        if (GameManager.Instance.playersFinished >= GameManager.Instance.currentPlayers && !finishGameButton.interactable)
+        if (GameManager.Instance.playersFinished == GameManager.Instance.currentPlayers && !finishGameButton.interactable)
         {
             finishGameButton.interactable = true;
         }
