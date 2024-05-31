@@ -261,8 +261,8 @@ public class Player : NetworkBehaviour
             {
                 lastArcLengthWD = lastArcLength + 1;
             }
-            
-            if (wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject != null)
+
+            if (wrongDirection)
             {
                 wdCounter -= Time.deltaTime;
                 if (wdCounter < 0)
@@ -270,7 +270,7 @@ public class Player : NetworkBehaviour
                     GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
                 }
             }
-            else if(!wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject != null)
+            else
             {
                 wdCounter = wdLimit;
                 GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(false);

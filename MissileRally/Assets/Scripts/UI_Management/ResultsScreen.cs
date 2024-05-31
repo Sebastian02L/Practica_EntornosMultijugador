@@ -39,7 +39,6 @@ public class ResultsScreen : MonoBehaviour
         //cuando ha finalizado la carrera
         if (GameManager.Instance.playersFinished == GameManager.Instance.currentPlayers && !finishGameButton.interactable)
         {
-            Debug.Log("Hola");
             finishGameButton.interactable = true;
         }
     }
