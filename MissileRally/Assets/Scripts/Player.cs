@@ -204,8 +204,8 @@ public class Player : NetworkBehaviour
             {   //Si la lista del currentRace no posee al coche
                 if (!GameManager.Instance.currentRace.ContainsPlayer(this))
                 {
-                    //Añade al jugador a la lista, lo teletransporta a su posicion correspondiente y ejecuta una llamada rpc
-                    //GameManager.Instance.currentRace.AddPlayer(this); 
+                    //Reduce la velocidad del coche a 0, lo teletransporta a su posicion correspondiente y ejecuta una llamada rpc 
+                    car.GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
                     car.transform.position = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.position;
                     car.transform.rotation = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("StartPos").GetChild((int)ID).transform.rotation;
                     lastArcLengthWD = arcLength;
