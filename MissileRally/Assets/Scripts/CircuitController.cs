@@ -14,10 +14,10 @@ public class CircuitController : MonoBehaviour
 
     void Start()
     {
-        transform.GetChild(GameManager.Instance.mapSelectedId - 1).gameObject.SetActive(true);
+        transform.GetChild(GameManager.Instance.mapSelectedId - 1).gameObject.SetActive(true); // Activa el mapa seleccionado por el host 
         if(GameManager.Instance.mapSelectedId == 4 )
         {
-            GameObject.Find("Directional Light").transform.rotation = Quaternion.Euler(-50,30,70); // Para poner el mapa de owl plains de noche
+            GameObject.Find("Directional Light").transform.rotation = Quaternion.Euler(-50,30,70); // Para poner el mapa de owl plains de noche 
         }
         _circuitPath = GetComponentInChildren<LineRenderer>();
 
