@@ -5,14 +5,18 @@ using UnityEngine.InputSystem;
 
 public class LapManager : MonoBehaviour
 {
-    public BoxCollider startLine;
-    public BoxCollider firstCheck;
-    public BoxCollider secondCheck;
+
+    //Este script se encarga de comprovar que se realiza una vuelta completa al circuito
+
+    public BoxCollider startLine;   //Collider trigger en la linea de salida/meta
+    public BoxCollider firstCheck;  //Collider trigger en aproximadamente un tercio del circuito
+    public BoxCollider secondCheck; //Collider trigger en aproximadamente dos tercios del circuito
 
     // Start is called before the first frame update
     void Start()
     {
-        startLine.enabled = false;
+        //Se activa el segundo collider (1/3 del circuito)
+        startLine.enabled = false; 
         firstCheck.enabled = true;
         secondCheck.enabled = false;
     }
@@ -25,11 +29,13 @@ public class LapManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Solo el Owner del coche puede ejecutar esto, al comprobar que su PlayerInput este activo
+        //Cuando el coche pase por alguno de los colliders, este se desactivará y se activará el siguiente
+        //Solo el coche del Owner puede ejecutar esto, al comprobar que su PlayerInput este activo
         if (other.gameObject.GetComponentInParent<PlayerInput>() != null && other.gameObject.GetComponentInParent<PlayerInput>().enabled == true)
         {
             if (startLine.enabled && !GameManager.Instance.player.lineCrossed)
             {
+                //Si es el collider de la linea de salida el que está activo, significa que se ha completado una vuelta
                 startLine.enabled = false;
                 firstCheck.enabled = true;
                 GameManager.Instance.player.UpdateCurrentLapServerRpc();
