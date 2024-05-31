@@ -53,7 +53,6 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> currentLapNet = new NetworkVariable<int>(1);
     public NetworkVariable<float> gameplayTimer = new NetworkVariable<float>();
     public NetworkVariable<float> finalTime = new NetworkVariable<float>();
-    public NetworkVariable<bool> hasFinishedNet = new NetworkVariable<bool>(false);
 
     // Player Info
     public string Name { get; set; }
@@ -110,7 +109,6 @@ public class Player : NetworkBehaviour
     {
         currentLapNet.OnValueChanged += OnCurrentLapChange;
         finalTime.OnValueChanged += OnFinalTimeChange;
-        hasFinishedNet.OnValueChanged += OnFinished;
 
         _lobby = GameObject.Find("Lobby");
 
@@ -562,10 +560,9 @@ public class Player : NetworkBehaviour
             carRb.constraints = RigidbodyConstraints.FreezeAll;
             arcLength = float.MaxValue - GameManager.Instance.playersFinished;
             GameManager.Instance.playersFinished += 1;
-            hasFinishedNet.Value = true;
             hasFinished = true;
 
-            PlayerHasFinishedClientRpc(arcLength);
+            PlayerHasFinishedClientRpc(arcLength, hasFinished);
         }
 
         SetPartialTimes();
@@ -630,9 +627,10 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    void PlayerHasFinishedClientRpc(float arcLength)
+    void PlayerHasFinishedClientRpc(float arcLength, bool hasFinished)
     {
         this.arcLength = arcLength;
+        this.hasFinished = hasFinished;
         GameManager.Instance.playersFinished += 1;
 
         if (IsOwner)
@@ -640,10 +638,5 @@ public class Player : NetworkBehaviour
             _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
             _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
         }
-    }
-
-    void OnFinished(bool previousValue, bool newValue)
-    {
-        hasFinished = newValue;
     }
 }
