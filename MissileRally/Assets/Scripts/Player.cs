@@ -634,8 +634,12 @@ public class Player : NetworkBehaviour
     {
         this.arcLength = arcLength;
         GameManager.Instance.playersFinished += 1;
-        _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
-        _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
+
+        if (IsOwner)
+        {
+            _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
+            _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
+        }
     }
 
     void OnFinished(bool previousValue, bool newValue)
