@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject circuitManager;
 
+    //Variable donde se almacena el valor de la variable de red que lleva el cronometro de la partida
+    //Simplemente se hace una asignacion, no se hace nada mas en este script.
+    public float gameplayTimer;
+
     public static GameManager Instance { get; private set; }
 
     void Awake()

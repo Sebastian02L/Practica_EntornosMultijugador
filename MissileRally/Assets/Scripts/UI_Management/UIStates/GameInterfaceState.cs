@@ -9,6 +9,10 @@ public class GameInterfaceState : AUIState
     TextMeshProUGUI speedText;
     TextMeshProUGUI positionText;
     TextMeshProUGUI lapText;
+    TextMeshProUGUI totalTimeText;
+    TextMeshProUGUI lapOneTimeText;
+    TextMeshProUGUI lapTwoTimeText;
+    TextMeshProUGUI lapThreeTimeText;
     CarController carController;
     int racePosition;
 
@@ -22,6 +26,11 @@ public class GameInterfaceState : AUIState
         speedText = gameUI.transform.Find("Panel").Find("SpeedText").GetComponent<TextMeshProUGUI>();
         positionText = gameUI.transform.Find("PanelPos").Find("PositionText").GetComponent<TextMeshProUGUI>();
         lapText = gameUI.transform.Find("PanelLap").Find("LapCounter").GetComponent<TextMeshProUGUI>();
+        totalTimeText = gameUI.transform.Find("PanelTimes").Find("TotalTime").GetComponent<TextMeshProUGUI>();
+        lapOneTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapOne").GetComponent<TextMeshProUGUI>();
+        lapTwoTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapTwo").GetComponent<TextMeshProUGUI>();
+        lapThreeTimeText = gameUI.transform.Find("PanelTimes").Find("TimeLapThree").GetComponent<TextMeshProUGUI>();
+
         gameUI.SetActive(true);
         carController = GameManager.Instance.player.car.GetComponent<CarController>();
     }
@@ -48,5 +57,7 @@ public class GameInterfaceState : AUIState
         positionText.text = racePosition.ToString() + "º";
 
         lapText.text = "Lap " + GameManager.Instance.player.CurrentLap + " / 3";
+
+        totalTimeText.text = "Total Time: " + GameManager.Instance.gameplayTimer + " s";
     }
 }

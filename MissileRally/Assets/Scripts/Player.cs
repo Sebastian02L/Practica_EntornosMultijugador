@@ -51,6 +51,7 @@ public class Player : NetworkBehaviour
     public PlayerData data;
     public NetworkVariable<int> mapSelectedId = new NetworkVariable<int>();
     public NetworkVariable<int> currentLapNet = new NetworkVariable<int>(1);
+    public NetworkVariable<float> gameplayTimer = new NetworkVariable<float>();
 
     // Player Info
     public string Name { get; set; }
@@ -61,6 +62,7 @@ public class Player : NetworkBehaviour
     public GameObject car;
     public int CurrentPosition { get; set; }
     public int CurrentLap = 1; //Vuelta en la que está
+    
 
     GameObject _lobby;
 
@@ -150,6 +152,8 @@ public class Player : NetworkBehaviour
         {
             GameManager.Instance.mapSelectedId = mapSelectedId.Value;
             mapSelectedId.OnValueChanged += OnMapSelected;
+            print("El coche se sucribio al cambio");
+            gameplayTimer.OnValueChanged += OnGameplayTimerChange;
         }
     }
 
@@ -225,9 +229,16 @@ public class Player : NetworkBehaviour
                 passedTime = 0f;
             }
         }
-
+        //A partir de esta condicion, la carrera ya ha empezado
         if(IsOwner && _playerInput.enabled && countDown < 0)
         {
+            //El servidor llevara el tiempo de la carrera y en los runtimes se obtendrá ese valor.
+            if(IsServer && IsOwner)
+            {
+                print("Cambiando el valor de la variable");
+                gameplayTimer.Value += (float) Math.Round(Time.deltaTime, 2);
+            }
+
             if (arcLength < lastArcLengthWD)
             {
                 wrongDirection = true;
@@ -543,5 +554,13 @@ public class Player : NetworkBehaviour
 
         CurrentLap = newValue;
         Debug.Log(CurrentLap);
+    }
+
+    void OnGameplayTimerChange(float previousValue, float newValue)
+    {
+        if (IsServer) { return; }
+
+        GameManager.Instance.gameplayTimer = newValue;
+        Debug.Log(newValue);
     }
 }
