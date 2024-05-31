@@ -34,7 +34,7 @@ public class RecoverComponent : NetworkBehaviour
                 outOfCircuit = false;
             }
 
-            recoverPosition = recoverPosition == null ? gameObject.GetComponent<Player>().spherePosition : recoverPosition;
+            if(recoverPosition == null ) recoverPosition = gameObject.GetComponent<Player>().spherePosition;
 
             currentTime += Time.deltaTime;      //Aumentamos el tiempo pasado desde el último chequeo
             if (currentTime > checkFrecuency)   //Si el tiempo es mayor al indicado en checkFrecuency
@@ -57,10 +57,6 @@ public class RecoverComponent : NetworkBehaviour
             //Si el coche esta volcado y se ha llegado al tiempo limite
             if (recover && activeRecover >= recoverLimit)
             {
-                //Giramos el coche haciendo coincidir los ejes Y local y del mundo, hacemos que mire hacia delante y le
-                //asignamos a su transformada la posición del punto de recuperacion, el cual es su esfera asociada.
-                //serverRecoverServerRpc();
-
                 //Giramos el coche haciendo coincidir los ejes Y local y del mundo, hacemos que mire hacia delante y le
                 //asignamos a su transformada la posición del punto de recuperacion, el cual es su esfera asociada.
                 RecoverCar();

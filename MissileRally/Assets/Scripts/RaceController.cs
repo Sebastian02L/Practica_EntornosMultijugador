@@ -21,6 +21,8 @@ public class RaceController : MonoBehaviour
             _debuggingSpheres[i].GetComponent<SphereCollider>().enabled = false;
         }
 
+        //Al terminar de instanciar las esferas, asignamos cada una a su jugador correpsondiente, para poder usarlo como punto de recuperacion
+        //cuando el coche del jugador se vuelca.
         foreach(var player in _players)
         {
             SpherePlayer(player);
