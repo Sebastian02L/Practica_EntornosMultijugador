@@ -76,9 +76,7 @@ public class RecoverComponent : NetworkBehaviour
         car.transform.Rotate(Vector3.left, -20);
         if (recoverPosition != null)
         {
-            CircuitController controller = GameManager.Instance.circuitManager.GetComponent<CircuitController>();
-            controller.ComputeClosestPointArcLength(car.transform.position, out _, out var carProj, out _);
-            car.transform.position = carProj;
+            car.transform.position = recoverPosition.position;
         }
         recover = false;
     }

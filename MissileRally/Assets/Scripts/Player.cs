@@ -262,32 +262,18 @@ public class Player : NetworkBehaviour
                 lastArcLengthWD = lastArcLength + 1;
             }
             
-            if (wrongDirection)
+            if (wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras") != null)
             {
                 wdCounter -= Time.deltaTime;
                 if (wdCounter < 0)
                 {
-                    try
-                    {
-                        GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
-                    }
-                    finally
-                    {
-
-                    }
-                }
-            }
-            else 
-            {
-                wdCounter = wdLimit; 
-                try
-                {
                     GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
                 }
-                finally
-                {
-
-                }
+            }
+            else if(!wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras") != null)
+            {
+                wdCounter = wdLimit;
+                GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(false);
             }
 
             if (GameManager.Instance.currentPlayers == 1)
@@ -417,22 +403,14 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void AddPlayer(ulong id, PlayerData data)
     {
-        try
-        {
-            GameManager.Instance.players.TryAdd(id, data);
-        }
-        catch (Exception e) { }
+        GameManager.Instance.players.TryAdd(id, data);
         AddPlayerServerRpc(id, data);
     }
 
     [ServerRpc]
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
-        try 
-        { 
         GameManager.Instance.players.TryAdd(id, data);
-        }
-        catch (Exception e) { }
         Name = data.name;
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
@@ -451,11 +429,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     void GetMyInfoClientRpc(ulong id, PlayerData data)
     {
-        try 
-        { 
         GameManager.Instance.players.TryAdd(id, data);
-        }
-        catch (Exception e) { }
         this.data = data;
 
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
@@ -524,6 +498,8 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void SendReadyPlayerServerRpc(ulong id, PlayerData data)
     {
+        //GameManager.Instance.players[id] = data;
+        //this.data = data;
         if(data.status == "Ready")
         {
             GameManager.Instance.readyPlayers += 1;
