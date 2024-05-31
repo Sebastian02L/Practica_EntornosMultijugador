@@ -233,7 +233,7 @@ public class Player : NetworkBehaviour
             }
         }
         //A partir de esta condicion, la carrera ya ha empezado
-        if(IsOwner && _playerInput.enabled && countDown < 0)
+        if(IsOwner && _playerInput.enabled && countDown <= 0)
         {
             Debug.Log("Entré");
             //El servidor llevara el tiempo de la carrera y en los runtimes se obtendrá ese valor.
