@@ -9,18 +9,20 @@ using UnityEngine;
 
 internal class MapSelectionState : AUIState
 {
-    GameObject MapSelectionMenu;
+    GameObject MapSelectionMenu; // Referencia al objeto del canvas llamado "SelectMapMenu"
 
     public MapSelectionState(IUI UI) : base(UI)
     {
     }
 
+    // Al entrar en este estado obtenemos la referencia del objeto SelectMapMenu y activamos dicho objeto para hacerlo visible
     public override void Enter()
     {
         MapSelectionMenu = UI.Canvas.transform.Find("SelectMapMenu").gameObject;
         MapSelectionMenu.SetActive(true);
     }
 
+    // Al salir del estado desactivamos el objeto SelectMapMenu para que no siga siendo visible
     public override void Exit()
     {
         MapSelectionMenu.SetActive(false);
