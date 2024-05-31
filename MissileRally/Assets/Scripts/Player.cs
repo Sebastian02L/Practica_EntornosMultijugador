@@ -277,7 +277,17 @@ public class Player : NetworkBehaviour
                 GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(false);
             }
 
-            
+            if (GameManager.Instance.currentPlayers == 1)
+            {
+                car.transform.position = new Vector3(1000, -1000, 1000);
+                Rigidbody carRb = car.GetComponent<Rigidbody>();
+                carRb.constraints = RigidbodyConstraints.FreezeAll;
+                arcLength = float.MaxValue - GameManager.Instance.playersFinished;
+                GameManager.Instance.playersFinished += 1;
+                hasFinished = true;
+                _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
+                _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
+            }
             
         }
     }
