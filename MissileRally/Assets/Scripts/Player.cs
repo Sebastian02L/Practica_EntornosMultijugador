@@ -53,6 +53,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> currentLapNet = new NetworkVariable<int>(1);
     public NetworkVariable<float> gameplayTimer = new NetworkVariable<float>();
     public NetworkVariable<float> finalTime = new NetworkVariable<float>();
+    public NetworkVariable<bool> hasFinishedNet = new NetworkVariable<bool>(false);
 
     // Player Info
     public string Name { get; set; }
@@ -91,6 +92,8 @@ public class Player : NetworkBehaviour
 
     float auxiliarTimer = 0;
 
+    public bool hasFinished = false;
+
     //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
     public Transform spherePosition;
 
@@ -107,6 +110,7 @@ public class Player : NetworkBehaviour
     {
         currentLapNet.OnValueChanged += OnCurrentLapChange;
         finalTime.OnValueChanged += OnFinalTimeChange;
+        hasFinishedNet.OnValueChanged += OnFinished;
 
         _lobby = GameObject.Find("Lobby");
 
@@ -552,6 +556,20 @@ public class Player : NetworkBehaviour
     {
         currentLapNet.Value += 1;
         CurrentLap += 1;
+
+        if (CurrentLap >= 4)
+        {
+            car.transform.position = new Vector3(1000, -1000, 1000);
+            Rigidbody carRb = car.GetComponent<Rigidbody>();
+            carRb.constraints = RigidbodyConstraints.FreezeAll;
+            arcLength = float.MaxValue - GameManager.Instance.playersFinished;
+            GameManager.Instance.playersFinished += 1;
+            hasFinishedNet.Value = true;
+            hasFinished = true;
+
+            PlayerHasFinishedClientRpc(arcLength);
+        }
+
         SetPartialTimes();
     }
 
@@ -612,5 +630,17 @@ public class Player : NetworkBehaviour
     {
         finalTime.Value = newValue;
         Debug.Log("Timepo final del jugador " + Name + ": " + finalTime.Value);
+    }
+
+    [ClientRpc]
+    void PlayerHasFinishedClientRpc(float arcLength)
+    {
+        this.arcLength = arcLength;
+        GameManager.Instance.playersFinished += 1;
+    }
+
+    void OnFinished(bool previousValue, bool newValue)
+    {
+        hasFinished = newValue;
     }
 }

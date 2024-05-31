@@ -54,16 +54,19 @@ public class RaceController : MonoBehaviour
     {
         for (int i = 0; i < _players.Count; ++i)
         {
-            _players[i].arcLength = ComputeCarArcLength(i);
-            if(Mathf.Abs(_players[i].arcLength - _players[i].lastArcLength) > 20) 
+            if (!_players[i].hasFinished)
             {
-                _players[i].arcLength = _players[i].lastArcLength;
-                _players[i].lineCrossed = true;
-            }
-            else
-            {
-                _players[i].lastArcLength = _players[i].arcLength;
-                _players[i].lineCrossed = false;
+                _players[i].arcLength = ComputeCarArcLength(i);
+                if (Mathf.Abs(_players[i].arcLength - _players[i].lastArcLength) > 20)
+                {
+                    _players[i].arcLength = _players[i].lastArcLength;
+                    _players[i].lineCrossed = true;
+                }
+                else
+                {
+                    _players[i].lastArcLength = _players[i].arcLength;
+                    _players[i].lineCrossed = false;
+                }
             }
         }
     

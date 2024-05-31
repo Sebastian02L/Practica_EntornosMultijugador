@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     public int numPlayers = 6;
 
+    public int playersFinished = 0;
+
     public int currentPlayers;
 
     public int readyPlayers;

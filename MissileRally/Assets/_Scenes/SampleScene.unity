@@ -6145,6 +6145,86 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2147002479}
     m_Modifications:
+    - target: {fileID: 160771642967686755, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 160771642967686755, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 187678827433513550, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 187678827433513550, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 387957511683934513, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 387957511683934513, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 695717589285183446, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 695717589285183446, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 712999223717887168, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 712999223717887168, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550863321986954122, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550863321986954122, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3764927949788749426, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3764927949788749426, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 4913188014377138551, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 4913188014377138551, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280881305978139139, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280881305978139139, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 6966110105028429730, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 6966110105028429730, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
     - target: {fileID: 7878897364483101861, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6236,6 +6316,22 @@ PrefabInstance:
     - target: {fileID: 8915948350894249158, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962012004448489647, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962012004448489647, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055058598406997014, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSize
+      value: 21.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055058598406997014, guid: f08a15947d8e1c943bdcea6b47840c40, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 21.27
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11925,6 +12021,7 @@ MonoBehaviour:
   player: {fileID: 0}
   gameStarted: 0
   numPlayers: 6
+  playersFinished: 0
   currentPlayers: 0
   readyPlayers: 0
   mapSelectedId: 0

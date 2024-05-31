@@ -34,7 +34,7 @@ public class GameInterfaceState : AUIState
 
     public override void Exit()
     {
-
+        gameUI.SetActive(false);
     }
 
     public override void FixedUpdate()
@@ -56,5 +56,10 @@ public class GameInterfaceState : AUIState
         lapText.text = "Lap " + GameManager.Instance.player.CurrentLap + " / 3";
 
         totalTimeText.text = "Total Time: " + GameManager.Instance.gameplayTimer + " s";
+
+        if (GameManager.Instance.player.hasFinished)
+        {
+            UI.State = new ResultsState(UI);
+        }
     }
 }

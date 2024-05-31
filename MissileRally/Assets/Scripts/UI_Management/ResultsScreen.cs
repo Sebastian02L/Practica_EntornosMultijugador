@@ -16,18 +16,18 @@ public class ResultsScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
+
         //Cuando un jugador acabe la carrera, se transicionara a esta interfaz, donde se pondrá a actualizar el nombre y los tiempos.
-        for(int i = 0; i < GameManager.Instance.currentRace._players.Count; i++)
+        for (int i = 0; i < GameManager.Instance.currentRace._players.Count; i++)
         {
             Player player = GameManager.Instance.currentRace._players[i];
 
-            if(player != null && player.finished)
+            if (player != null && player.hasFinished)
             {
-                playerNames[i].text = $"{i}. {player.Name}";
-                playerTimes[i].text = $"{i}. {player.finalTime.Value}";
+                playerNames[i].text = $"{i + 1}. {player.Name}";
+                playerTimes[i].text = $"Total Time: {player.finalTime.Value}";
             }
         }
-        */
+
     }
 }
