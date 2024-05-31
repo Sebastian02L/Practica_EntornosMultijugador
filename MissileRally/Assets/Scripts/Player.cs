@@ -93,9 +93,6 @@ public class Player : NetworkBehaviour
 
     public bool hasFinished = false;
 
-    //Transformada de la esfera blanca asociada al jugador. Cuando el jugador se desvuelca, se teletransporta a ella.
-    public Transform spherePosition;
-
     public override string ToString()
     {
         return Name;

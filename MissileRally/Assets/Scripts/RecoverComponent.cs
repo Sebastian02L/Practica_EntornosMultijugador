@@ -9,7 +9,6 @@ public class RecoverComponent : NetworkBehaviour
     float currentTime = 0.0f;        //Contador del tiempo pasado desde el ultimo chequeo realizado
     float activeRecover = 0.0f;      //Temporizador del periodo de gracia
     bool recover = false;            //Variable que indica si el coche puede recuperarse o no
-    public Transform recoverPosition;//Referencia a la transformada de la esfera asociada al jugador
     public GameObject car;
     public bool outOfCircuit = false;
 
@@ -33,8 +32,6 @@ public class RecoverComponent : NetworkBehaviour
                 RecoverCar();
                 outOfCircuit = false;
             }
-
-            if(recoverPosition == null ) recoverPosition = gameObject.GetComponent<Player>().spherePosition;
 
             currentTime += Time.deltaTime;      //Aumentamos el tiempo pasado desde el último chequeo
             if (currentTime > checkFrecuency)   //Si el tiempo es mayor al indicado en checkFrecuency
@@ -74,7 +71,7 @@ public class RecoverComponent : NetworkBehaviour
         car.transform.up = Vector3.up;
         car.transform.LookAt(forwardDirection);
         car.transform.Rotate(Vector3.left, -20);
-        if (recoverPosition != null)
+        if (GameManager.Instance.gameStarted)
         {
             CircuitController controller = GameManager.Instance.circuitManager.GetComponent<CircuitController>();
             controller.ComputeClosestPointArcLength(car.transform.position, out _, out var carProj, out _);

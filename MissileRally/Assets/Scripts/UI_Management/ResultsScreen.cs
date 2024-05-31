@@ -18,6 +18,7 @@ public class ResultsScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         //Cuando un jugador acabe la carrera, se transicionara a esta interfaz, donde se pondrá a actualizar el nombre y los tiempos.
         for (int i = 0; i < GameManager.Instance.currentRace._players.Count; i++)
         {
@@ -37,7 +38,7 @@ public class ResultsScreen : MonoBehaviour
 
         //Si todos los que hay en la partida han terminado, habilitamos el boton de "Exit Game" o si el numero de jugadores conectados es distinto
         //cuando ha finalizado la carrera
-        if (GameManager.Instance.playersFinished == GameManager.Instance.currentPlayers && !finishGameButton.interactable)
+        if (GameManager.Instance.playersFinished >= GameManager.Instance.currentPlayers && !finishGameButton.interactable)
         {
             finishGameButton.interactable = true;
         }
