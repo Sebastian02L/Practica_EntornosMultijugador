@@ -10,16 +10,9 @@ public class RaceController : MonoBehaviour
     private CircuitController _circuitController;
     private GameObject[] _debuggingSpheres;
 
-    private void Start()
+    public void Start()
     {
         if (_circuitController == null) _circuitController = GetComponent<CircuitController>();
-
-        _debuggingSpheres = new GameObject[GameManager.Instance.numPlayers];
-        for (int i = 0; i < GameManager.Instance.numPlayers; ++i)
-        {
-            _debuggingSpheres[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            _debuggingSpheres[i].GetComponent<SphereCollider>().enabled = false;
-        }
     }
 
     private void Update()
@@ -32,6 +25,16 @@ public class RaceController : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
+        if (_debuggingSpheres == null)
+        {
+            _debuggingSpheres = new GameObject[GameManager.Instance.numPlayers];
+            for (int i = 0; i < GameManager.Instance.numPlayers; ++i)
+            {
+                _debuggingSpheres[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                _debuggingSpheres[i].GetComponent<SphereCollider>().enabled = false;
+            }
+        }
+
         _players.Add(player);
         player.spherePosition = _debuggingSpheres[player.ID].transform; //Asociamos la esfera correspondiente al jugador
     }
