@@ -247,13 +247,12 @@ public class Player : NetworkBehaviour
                 GameManager.Instance.gameplayTimer = gameplayTimer.Value;
             }
 
-            if (arcLength < lastArcLengthWD)
+            if (arcLength < lastArcLengthWD && Mathf.Abs(arcLength - lastArcLengthWD) > 0.01f)
             {
                 wrongDirection = true;
             }
             else
             {
-
                 lastArcLengthWD = arcLength;
                 wrongDirection = false;
             }
