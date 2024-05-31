@@ -63,7 +63,7 @@ public class Player : NetworkBehaviour
     public GameObject car;
     public int CurrentPosition { get; set; }
     public int CurrentLap = 1; //Vuelta en la que está
-
+    
 
     GameObject _lobby;
 
@@ -223,19 +223,19 @@ public class Player : NetworkBehaviour
         //Cuando los jugadores no puedan moverse y se haya escogido un mapa, pasamos a la fase de preparacion de la carrera.
         //Sin esta condicion GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers,
         //al ser IsServer, se ejecuta en el Lobby cuando se une un cliente, cosa que no queremos
-        if (IsServer && !_playerInput.enabled && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && countDown >= 0)
+        if (IsServer && !_playerInput.enabled && GameManager.Instance.currentRace._players.Count == GameManager.Instance.currentPlayers && countDown >= 0) 
         {
             passedTime += Time.deltaTime;
 
             //Cada 1.5 segundos
-            if (passedTime >= countFrecuency)
+            if(passedTime >= countFrecuency) 
             {
                 RaceStartingClientRpc(countDown);
                 passedTime = 0f;
             }
         }
         //A partir de esta condicion, la carrera ya ha empezado
-        if (IsOwner && _playerInput.enabled && countDown <= 0)
+        if(IsOwner && _playerInput.enabled && countDown <= 0)
         {
             //El servidor llevara el tiempo de la carrera y en los runtimes se obtendrá ese valor.
             //Una variable auxiliar lleva el tiempo total, luego se redondea y se asigna a la variable de red del coche del host, de manera que en el resto de runtimes se actualizara
@@ -243,7 +243,7 @@ public class Player : NetworkBehaviour
             if (IsServer)
             {
                 auxiliarTimer += Time.deltaTime;
-                gameplayTimer.Value = (float)Math.Round(auxiliarTimer, 2);
+                gameplayTimer.Value = (float) Math.Round(auxiliarTimer, 2);
                 GameManager.Instance.gameplayTimer = gameplayTimer.Value;
             }
 
@@ -261,20 +261,33 @@ public class Player : NetworkBehaviour
             {
                 lastArcLengthWD = lastArcLength + 1;
             }
-
+            
             if (wrongDirection)
             {
                 wdCounter -= Time.deltaTime;
                 if (wdCounter < 0)
                 {
-                    GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
+                    try
+                    {
+                        GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
+                    }
+                    finally
+                    {
+
+                    }
                 }
             }
-            else
+            else 
             {
-                wdCounter = wdLimit;
-                GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
+                wdCounter = wdLimit; 
+                try
+                {
+                    GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
+                }
+                finally
+                {
 
+                }
             }
 
             if (GameManager.Instance.currentPlayers == 1)
@@ -288,7 +301,7 @@ public class Player : NetworkBehaviour
                 _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
                 _camera.LookAt = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("LookAt");
             }
-
+            
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -380,9 +393,9 @@ public class Player : NetworkBehaviour
         }
         else //Si no era un jugador que estaba listo, simplemente lo elimina del diccionario en los clientes
         {
-            UpdatePlayersClientRpc(id, false);
+            UpdatePlayersClientRpc(id, false); 
         }
-
+        
     }
 
     [ClientRpc]
@@ -404,14 +417,22 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void AddPlayer(ulong id, PlayerData data)
     {
-        GameManager.Instance.players.TryAdd(id, data);
+        try
+        {
+            GameManager.Instance.players.TryAdd(id, data);
+        }
+        catch (Exception e) { }
         AddPlayerServerRpc(id, data);
     }
 
     [ServerRpc]
     void AddPlayerServerRpc(ulong id, PlayerData data)
     {
+        try 
+        { 
         GameManager.Instance.players.TryAdd(id, data);
+        }
+        catch (Exception e) { }
         Name = data.name;
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
     }
@@ -430,7 +451,11 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     void GetMyInfoClientRpc(ulong id, PlayerData data)
     {
+        try 
+        { 
         GameManager.Instance.players.TryAdd(id, data);
+        }
+        catch (Exception e) { }
         this.data = data;
 
         car.transform.Find("MiniCanvas").transform.Find("Nombre").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].name;
@@ -485,7 +510,7 @@ public class Player : NetworkBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void OnPlayerReady()
     {
-        if (data.status == "Unready")
+        if(data.status == "Unready")
         {
             data.status = "Ready";
         }
@@ -499,7 +524,7 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void SendReadyPlayerServerRpc(ulong id, PlayerData data)
     {
-        if (data.status == "Ready")
+        if(data.status == "Ready")
         {
             GameManager.Instance.readyPlayers += 1;
         }
@@ -517,7 +542,7 @@ public class Player : NetworkBehaviour
         GameManager.Instance.players[id] = data;
         this.data = data;
         GameManager.Instance.readyPlayers = readyPlayers;
-
+        
 
         car.transform.Find("MiniCanvas").transform.Find("Estado").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.players[ID].status;
     }
@@ -539,7 +564,7 @@ public class Player : NetworkBehaviour
 
     [ClientRpc]
     void getReadyPlayersClientRpc(int readyPlayers, ClientRpcParams param)
-    {
+    { 
         GameManager.Instance.readyPlayers = readyPlayers;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
