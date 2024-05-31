@@ -262,7 +262,7 @@ public class Player : NetworkBehaviour
                 lastArcLengthWD = lastArcLength + 1;
             }
             
-            if (wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras") != null)
+            if (wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject != null)
             {
                 wdCounter -= Time.deltaTime;
                 if (wdCounter < 0)
@@ -270,7 +270,7 @@ public class Player : NetworkBehaviour
                     GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(true);
                 }
             }
-            else if(!wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras") != null)
+            else if(!wrongDirection && GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject != null)
             {
                 wdCounter = wdLimit;
                 GameObject.Find("GameUI").transform.Find("PanelAtras").gameObject.SetActive(false);
