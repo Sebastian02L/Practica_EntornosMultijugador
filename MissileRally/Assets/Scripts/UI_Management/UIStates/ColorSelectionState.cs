@@ -10,13 +10,13 @@ public class ColorSelectionState : AUIState
     {
     }
 
-    public override void Enter()
+    public override void Enter() //Cuando se entra en este estado se activa el menú de selección de color
     {
         colorSelectionUI = UI.Canvas.transform.Find("SelectCarColorMenu").gameObject;
         colorSelectionUI.SetActive(true);
     }
 
-    public override void Exit()
+    public override void Exit() // Al salir del estado se desactiva el menú
     {
         colorSelectionUI.SetActive(false);
     }
