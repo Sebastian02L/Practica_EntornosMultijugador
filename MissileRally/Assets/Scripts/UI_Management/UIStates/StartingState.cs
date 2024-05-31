@@ -21,6 +21,7 @@ public class StartingState : AUIState
     {
     }
 
+    // Si el jugador ha elegido ser cliente o host y además se ha instanciado su objeto player, se cambia al estado de seleccionar un color
     public override void Update()
     {
         if ((NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer) && GameManager.Instance.player != null)
