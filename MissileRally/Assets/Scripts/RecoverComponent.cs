@@ -70,7 +70,7 @@ public class RecoverComponent : NetworkBehaviour
         Vector3 forwardDirection = transform.forward + transform.position;
         car.transform.up = Vector3.up;
         car.transform.LookAt(forwardDirection);
-        car.transform.Rotate(Vector3.left, -20);
+        car.transform.Rotate(Vector3.left, -10);
         if (GameManager.Instance.gameStarted)
         {
             CircuitController controller = GameManager.Instance.circuitManager.GetComponent<CircuitController>();
