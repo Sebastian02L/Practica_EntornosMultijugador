@@ -25,7 +25,7 @@ public class ResultsScreen : MonoBehaviour
             if (player != null && player.hasFinished)
             {
                 playerNames[i].text = $"{i + 1}. {player.Name}";
-                playerTimes[i].text = $"Total Time: {player.finalTime.Value}";
+                playerTimes[i].text = $"Total Time: {player.finalTime.Value} s";
             }
         }
 
