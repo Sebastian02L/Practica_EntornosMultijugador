@@ -56,7 +56,8 @@ public class CarController : NetworkBehaviour
     }
 
     public void Update()
-    {   //PUEDE QUE TENGAMOS QUE USAR UN RIGIDBODY DE NET
+    {   
+        //El servidor calcula la velocidad de cada coche y se la pasa a los clientes con una llamada Rpc
         if (IsServer)
         {
             Speed = _rigidbody.velocity.magnitude;
@@ -64,10 +65,11 @@ public class CarController : NetworkBehaviour
         }
     }
 
+    //El server manda la velocidad de los coches a los clientes y los clientes las asignan a sus coches
     [ClientRpc]
     void UpdateSpeedClientRPC(float speed)
     {
-        Speed = speed;
+        Speed = speed; 
     }
 
     public void FixedUpdate()
