@@ -6,13 +6,13 @@ using UnityEngine.InputSystem;
 public class LapManager : MonoBehaviour
 {
 
-    //Este script se encarga de comprovar que se realiza una vuelta completa al circuito
+    //Este script se encarga de comprobar que se realiza una vuelta completa al circuito
 
     public BoxCollider startLine;   //Collider trigger en la linea de salida/meta
     public BoxCollider firstCheck;  //Collider trigger en aproximadamente un tercio del circuito
     public BoxCollider secondCheck; //Collider trigger en aproximadamente dos tercios del circuito
 
-    // Start is called before the first frame update
+
     void Start()
     {
         //Se activa el segundo collider (1/3 del circuito)

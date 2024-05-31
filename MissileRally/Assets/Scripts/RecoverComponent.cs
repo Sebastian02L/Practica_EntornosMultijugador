@@ -10,7 +10,7 @@ public class RecoverComponent : NetworkBehaviour
     float activeRecover = 0.0f;      //Temporizador del periodo de gracia
     bool recover = false;            //Variable que indica si el coche puede recuperarse o no
     public GameObject car;
-    public bool outOfCircuit = false;//Si se ha chocado con un collider de fuera del mapa
+    public bool outOfCircuit = false; //Si se ha chocado con un collider de fuera del mapa
 
     //En el Start, guardamos la referencia a la esfera blanca asociada al jugador
     private void Start()
@@ -21,7 +21,7 @@ public class RecoverComponent : NetworkBehaviour
         }
     }
 
-    //En el Update, se realiza toda la lógica que controla el sistema de recuperación. Es en el host donde se hacen las comprovaciones
+    //En el Update, se realiza toda la lógica que controla el sistema de recuperación. Es en el host donde se hacen las comprobaciones
     void Update()
     {
         if(IsServer)
