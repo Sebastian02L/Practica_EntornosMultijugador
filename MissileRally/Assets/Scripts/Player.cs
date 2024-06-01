@@ -322,7 +322,7 @@ public class Player : NetworkBehaviour
                 car.transform.position = new Vector3(1000, -1000, 1000);
                 Rigidbody carRb = car.GetComponent<Rigidbody>();
                 carRb.constraints = RigidbodyConstraints.FreezeAll;
-                arcLength = float.MaxValue - GameManager.Instance.playersFinished;
+                arcLength = float.MaxValue - GameManager.Instance.playersFinished; // 
                 GameManager.Instance.playersFinished += 1;
                 hasFinished = true;
                 _camera.Follow = GameManager.Instance.circuitManager.transform.GetChild(GameManager.Instance.mapSelectedId - 1).Find("Follow");
